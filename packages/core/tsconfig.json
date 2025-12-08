@@ -1,0 +1,23 @@
+
+{
+  "extends": "@readykit/typescript-config/react-library.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "paths": {
+      "@readykit/tokens": ["../tokens/src/index.ts"],
+      "@readykit/hooks": ["../hooks/src/index.ts"],
+      "@readykit/icons": ["../icons/src/index.ts"]
+    },
+  },
+  "references": [
+    { "path": "../tokens" },
+    { "path": "../hooks" },
+    { "path": "../icons" }
+  ],
+  "include": ["src/**/*"],
+  "exclude": ["dist", "build", "node_modules"]
+}

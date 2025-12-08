@@ -1,13 +1,50 @@
+# OS
 .DS_Store
+Thumbs.db
+
+# Dependencies
 node_modules
+.pnp
+.pnp.js
+
+# Turborepo
 .turbo
+
+# Logs
 *.log
-.next
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Build outputs
 dist
 dist-ssr
-*.local
-.env
-.cache
+build
 server/dist
 public/dist
 storybook-static/
+
+# TypeScript
+*.tsbuildinfo
+
+# Next.js
+.next
+out
+
+# Environment
+.env
+.env.local
+.env.*.local
+*.local
+
+# Cache
+.cache
+
+# Testing
+coverage
+.nyc_output
+
+# IDE
+.vscode/settings.json
+.idea
+*.swp

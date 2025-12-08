@@ -1,0 +1,38 @@
+{
+  "name": "@readykit/icons",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false, 
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc --build --verbose && tsup",
+    "clean": "rm -rf .turbo node_modules dist .tsbuildinfo tsconfig.tsbuildinfo",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@readykit/eslint-config": "*",
+    "@readykit/typescript-config": "*",
+    "@svgr/core": "^8.1.0",
+    "@svgr/plugin-jsx": "^8.1.0",
+    "@svgr/plugin-prettier": "^8.1.0",
+    "@svgr/plugin-svgo": "^8.1.0",
+    "@types/jest": "^30.0.0",
+    "eslint": "^9.25.0",
+    "react-native-svg": "15.12.1",
+    "svgo": "^4.0.0",
+    "tsup": "^8.0.2",
+    "typescript": "latest"
+  },
+  "peerDependencies": {
+    "react": "^19.1.x",
+    "react-native-svg": "15.12.1"
+  }
+}

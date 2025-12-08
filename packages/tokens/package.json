@@ -1,0 +1,28 @@
+{
+  "name": "@readykit/tokens",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --build --verbose && tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "clean": "rm -rf .turbo node_modules dist .tsbuildinfo tsconfig.tsbuildinfo"
+  },
+  "devDependencies": {
+    "@readykit/eslint-config": "*",
+    "@readykit/typescript-config": "*",
+    "eslint": "^9.25.0",
+    "tsup": "^8.0.2",
+    "typescript": "latest"
+  }
+}

@@ -1,5 +1,29 @@
 {
-  "extends": "@repo/typescript-config/react-app.json",
-  "include": ["."],
-  "exclude": ["dist", "build", "node_modules"]
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "@/*": ["./*"],
+      "@readykit/core": ["../../packages/core/src"],
+      "@readykit/core/*": ["../../packages/core/src/*"],
+      "@readykit/tokens": ["../../packages/tokens/src"],
+      "@readykit/tokens/*": ["../../packages/tokens/src/*"],
+      "@readykit/hooks": ["../../packages/hooks/src"],
+      "@readykit/hooks/*": ["../../packages/hooks/src/*"],
+      "@readykit/icons": ["../../packages/icons/src"],
+      "@readykit/icons/*": ["../../packages/icons/src/*"]
+    }
+  },
+  "references": [
+    { "path": "../../packages/core" },
+    { "path": "../../packages/tokens" },
+    { "path": "../../packages/hooks" },
+    { "path": "../../packages/icons" }
+  ],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ]
 }

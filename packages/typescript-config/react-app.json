@@ -2,15 +2,14 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "./base.json",
   "compilerOptions": {
-    "allowJs": true,
-    "declaration": false,
-    "declarationMap": false,
-    "incremental": true,
-    "jsx": "preserve",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "module": "esnext",
+    "jsx": "react-native",
+    "lib": ["ESNext"],
+    "module": "ESNext",
+    "target": "esnext",
+    "types": ["react", "react-native", "jest"],
     "noEmit": true,
-    "resolveJsonModule": true,
-    "target": "es5"
+    "declaration": false,
+    "declarationMap": false,    
+    "allowJs": true
   }
 }

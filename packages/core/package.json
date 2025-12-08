@@ -1,0 +1,90 @@
+{
+  "name": "@readykit/core",
+  "version": "0.0.0",
+  "sideEffects": false,
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./configureTheme": {
+      "types": "./dist/configureTheme.d.ts",
+      "import": "./dist/configureTheme.mjs",
+      "require": "./dist/configureTheme.js"
+    },
+    "./i18n": {
+      "types": "./dist/i18n/index.d.ts",
+      "import": "./dist/i18n/index.mjs",
+      "require": "./dist/i18n/index.js"
+    },
+    "./locales": {
+      "types": "./dist/locales/index.d.ts",
+      "import": "./dist/locales/index.mjs",
+      "require": "./dist/locales/index.js"
+    },
+    "./hooks": {
+      "types": "./dist/hooks/index.d.ts",
+      "import": "./dist/hooks/index.mjs",
+      "require": "./dist/hooks/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --build && tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
+    "clean": "rm -rf .turbo node_modules dist .tsbuildinfo tsconfig.tsbuildinfo",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "@readykit/hooks": "*",
+    "@readykit/icons": "*",
+    "@readykit/tokens": "*",
+    "react-native-unistyles": "^3.0.19"
+  },
+  "peerDependencies": {
+    "expo-font": "~14.0.10",
+    "expo-linear-gradient": "~14.1.4",
+    "i18next": ">=23.0.0",
+    "react": "^19.1.x",
+    "react-i18next": ">=13.0.0",
+    "react-native": "^0.81.x",
+    "react-native-gesture-handler": "~2.28.0",
+    "react-native-reanimated": "~4.1.1",
+    "react-native-worklets": "0.5.1"
+  },
+  "devDependencies": {
+    "@readykit/eslint-config": "*",
+    "@readykit/typescript-config": "*",
+    "@storybook/react-native": "^10.1.0",
+    "@testing-library/react-native": "^13.3.3",
+    "@types/jest": "29.5.14",
+    "@types/react": "^19.1.0",
+    "@types/react-test-renderer": "^19.1.0",
+    "babel-jest": "^30.2.0",
+    "eslint": "^9.25.0",
+    "expo-font": "~14.0.10",
+    "expo-linear-gradient": "~14.1.4",
+    "i18next": "^23.10.0",
+    "jest": "~29.7.0",
+    "jest-expo": "~54.0.14",
+    "react-i18next": "^14.0.5",
+    "react-native-gesture-handler": "~2.28.0",
+    "react-native-reanimated": "~4.1.1",
+    "react-native-svg": "15.12.1",
+    "react-native-worklets": "0.5.1",
+    "react-test-renderer": "19.1.0",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.0.2",
+    "typescript": "latest"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

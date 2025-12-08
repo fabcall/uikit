@@ -1,5 +1,5 @@
 {
-  "name": "@repo/eslint-config",
+  "name": "@readykit/eslint-config",
   "version": "0.0.0",
   "private": true,
   "files": [
@@ -7,11 +7,19 @@
     "react.js",
     "storybook.js"
   ],
-  "devDependencies": {
-    "@vercel/style-guide": "^5.2.0",
+  "dependencies": {
+    "@eslint/js": "^9.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
     "eslint-config-turbo": "^2.0.0",
-    "eslint-plugin-mdx": "^3.1.5",
+    "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-only-warn": "^1.1.0",
+    "eslint-plugin-react": "^7.35.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-storybook": "^0.8.0"
+  },
+  "peerDependencies": {
+    "eslint": "^9.0.0"
   }
 }

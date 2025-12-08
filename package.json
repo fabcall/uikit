@@ -4,6 +4,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
@@ -13,10 +14,17 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
+    "@commitlint/cli": "^20.2.0",
+    "@commitlint/config-conventional": "^20.2.0",
+    "lefthook": "^2.0.9",
     "prettier": "^3.2.5",
     "turbo": "^2.6.3"
   },
-  "name": "design-system",
+  "overrides": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "name": "readykit",
   "packageManager": "npm@11.6.2",
   "workspaces": [
     "apps/*",
