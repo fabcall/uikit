@@ -62,7 +62,7 @@ export const Default: Story = {
     const [activeTab, setActiveTab] = useState("home");
 
     return (
-      <View style={{ flex: 1, justifyContent: "flex-end" }}>
+      <View style={{ flex: 1, justifyContent: "flex-end", backgroundColor: "#F5F8FF" }}>
         <TabBar
           gradientColors={["#2962FF1A", "#FFFFFF00"]}
           activeTintColor="#2962FF"
@@ -94,7 +94,13 @@ export const WithBadges: Story = {
 
     return (
       <View style={{ flex: 1, justifyContent: "flex-end" }}>
-        <TabBar>
+        <TabBar
+          gradientColors={["#2962FF1A", "#FFFFFF00"]}
+          activeTintColor="#2962FF"
+          inactiveTintColor="#9CA3AF"
+          activeLabelColor="#2962FF"
+          inactiveLabelColor="#101828"
+        >
           <TabBar.Item
             icon={({ color, size }) => (
               <Home fill={color} width={size} height={size} />

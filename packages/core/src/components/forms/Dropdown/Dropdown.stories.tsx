@@ -104,6 +104,301 @@ export const WithLabel: Story = {
   },
 };
 
+// ==================== MULTI-SELECT STORIES ====================
+
+export const MultiSelectBasic: Story = {
+  render: () => {
+    const [selected, setSelected] = useState<string[]>([]);
+
+    return (
+      <View style={{ gap: 16, padding: 20, width: "100%", maxWidth: 400 }}>
+        <Dropdown
+          label="Select Fruits"
+          multiple
+          onChange={setSelected}
+          options={fruitOptions}
+          placeholder="Choose fruits..."
+          value={selected}
+        />
+        {selected.length > 0 ? (
+          <Text color="secondary">Selected: {selected.join(", ")}</Text>
+        ) : null}
+      </View>
+    );
+  },
+};
+
+export const MultiSelectWithSelectAll: Story = {
+  render: () => {
+    const [selected, setSelected] = useState<string[]>([]);
+
+    return (
+      <View style={{ gap: 16, padding: 20, width: "100%", maxWidth: 400 }}>
+        <Dropdown
+          label="Select Countries"
+          multiple
+          onChange={setSelected}
+          options={countryOptions}
+          placeholder="Choose countries..."
+          selectAllLabel="Select All Countries"
+          showSelectAll
+          value={selected}
+        />
+        {selected.length > 0 ? (
+          <Text color="secondary">
+            Selected {selected.length} countries: {selected.join(", ")}
+          </Text>
+        ) : null}
+      </View>
+    );
+  },
+};
+
+export const MultiSelectSearchable: Story = {
+  render: () => {
+    const [selected, setSelected] = useState<string[]>(["apple", "banana"]);
+
+    return (
+      <View style={{ gap: 16, padding: 20, width: "100%", maxWidth: 400 }}>
+        <Dropdown
+          label="Search and Select Fruits"
+          multiple
+          onChange={setSelected}
+          options={fruitOptions}
+          placeholder="Search fruits..."
+          searchable
+          searchPlaceholder="Type to search..."
+          showSelectAll
+          value={selected}
+        />
+      </View>
+    );
+  },
+};
+
+export const MultiSelectMaxDisplayItems: Story = {
+  render: () => {
+    const [selected1, setSelected1] = useState<string[]>([
+      "apple",
+      "banana",
+      "orange",
+      "grape",
+      "mango",
+    ]);
+    const [selected2, setSelected2] = useState<string[]>([
+      "apple",
+      "banana",
+      "orange",
+      "grape",
+      "mango",
+    ]);
+
+    return (
+      <View style={{ gap: 24, padding: 20, width: "100%", maxWidth: 400 }}>
+        <View style={{ gap: 8 }}>
+          <Text style={{ fontSize: 14, fontWeight: "600" }}>
+            Default (max 3 items shown)
+          </Text>
+          <Dropdown
+            multiple
+            onChange={setSelected1}
+            options={fruitOptions}
+            placeholder="Select fruits"
+            value={selected1}
+          />
+        </View>
+
+        <View style={{ gap: 8 }}>
+          <Text style={{ fontSize: 14, fontWeight: "600" }}>
+            Custom (max 2 items shown)
+          </Text>
+          <Dropdown
+            maxDisplayItems={2}
+            multiple
+            onChange={setSelected2}
+            options={fruitOptions}
+            placeholder="Select fruits"
+            value={selected2}
+          />
+        </View>
+      </View>
+    );
+  },
+};
+
+export const MultiSelectCustomRenderer: Story = {
+  render: () => {
+    const [selected, setSelected] = useState<string[]>([
+      "apple",
+      "banana",
+      "orange",
+    ]);
+
+    return (
+      <View style={{ gap: 16, padding: 20, width: "100%", maxWidth: 400 }}>
+        <Dropdown
+          label="With Custom Selected Count"
+          maxDisplayItems={1}
+          multiple
+          onChange={setSelected}
+          options={fruitOptions}
+          placeholder="Select fruits"
+          renderSelectedCount={(count, total) =>
+            `${count} of ${total} fruits selected`
+          }
+          showSelectAll
+          value={selected}
+        />
+      </View>
+    );
+  },
+};
+
+export const MultiSelectDisabled: Story = {
+  render: () => {
+    const [selected, setSelected] = useState<string[]>(["apple", "banana"]);
+
+    return (
+      <View style={{ gap: 16, padding: 20, width: "100%", maxWidth: 400 }}>
+        <Dropdown
+          disabled
+          label="Disabled Multi-Select"
+          multiple
+          onChange={setSelected}
+          options={fruitOptions}
+          placeholder="Cannot select"
+          value={selected}
+        />
+      </View>
+    );
+  },
+};
+
+export const MultiSelectWithError: Story = {
+  render: () => {
+    const [selected, setSelected] = useState<string[]>([]);
+
+    return (
+      <View style={{ gap: 16, padding: 20, width: "100%", maxWidth: 400 }}>
+        <Dropdown
+          error="Please select at least one option"
+          label="Required Multi-Select"
+          multiple
+          onChange={setSelected}
+          options={fruitOptions}
+          placeholder="Select fruits"
+          required
+          value={selected}
+        />
+      </View>
+    );
+  },
+};
+
+export const MultiSelectWithDisabledOptions: Story = {
+  render: () => {
+    const [selected, setSelected] = useState<string[]>(["opt1"]);
+
+    const optionsWithDisabled: DropdownOption[] = [
+      { label: "Available Option 1", value: "opt1" },
+      { label: "Disabled Option", value: "opt2", disabled: true },
+      { label: "Available Option 2", value: "opt3" },
+      { label: "Another Disabled", value: "opt4", disabled: true },
+      { label: "Available Option 3", value: "opt5" },
+    ];
+
+    return (
+      <View style={{ gap: 16, padding: 20, width: "100%", maxWidth: 400 }}>
+        <Dropdown
+          label="Multi-Select with Disabled Options"
+          multiple
+          onChange={setSelected}
+          options={optionsWithDisabled}
+          placeholder="Some options are disabled"
+          showSelectAll
+          value={selected}
+        />
+      </View>
+    );
+  },
+};
+
+export const MultiSelectNumericValues: Story = {
+  render: () => {
+    const [selected, setSelected] = useState<number[]>([1, 3]);
+
+    const numericOptions: DropdownOption<number>[] = [
+      { label: "First option", value: 1 },
+      { label: "Second option", value: 2 },
+      { label: "Third option", value: 3 },
+      { label: "Fourth option", value: 4 },
+      { label: "Fifth option", value: 5 },
+    ];
+
+    return (
+      <View style={{ gap: 16, padding: 20, width: "100%", maxWidth: 400 }}>
+        <Dropdown
+          label="Select Numbers"
+          multiple
+          onChange={setSelected}
+          options={numericOptions}
+          placeholder="Choose numbers"
+          showSelectAll
+          value={selected}
+        />
+        {selected.length > 0 ? (
+          <Text color="secondary">Selected values: {selected.join(", ")}</Text>
+        ) : null}
+      </View>
+    );
+  },
+};
+
+export const ComparisonSingleVsMulti: Story = {
+  render: () => {
+    const [singleValue, setSingleValue] = useState<string>();
+    const [multiValue, setMultiValue] = useState<string[]>([]);
+
+    return (
+      <View style={{ gap: 24, padding: 20, width: "100%", maxWidth: 400 }}>
+        <View style={{ gap: 8 }}>
+          <Text style={{ fontSize: 16, fontWeight: "600" }}>Single Select</Text>
+          <Dropdown
+            label="Choose one fruit"
+            onChange={setSingleValue}
+            options={fruitOptions}
+            placeholder="Select a fruit"
+            searchable
+            value={singleValue}
+          />
+          {singleValue ? (
+            <Text color="secondary">Selected: {singleValue}</Text>
+          ) : null}
+        </View>
+
+        <View style={{ gap: 8 }}>
+          <Text style={{ fontSize: 16, fontWeight: "600" }}>Multi Select</Text>
+          <Dropdown
+            label="Choose multiple fruits"
+            multiple
+            onChange={setMultiValue}
+            options={fruitOptions}
+            placeholder="Select fruits"
+            searchable
+            showSelectAll
+            value={multiValue}
+          />
+          {multiValue.length > 0 ? (
+            <Text color="secondary">Selected: {multiValue.join(", ")}</Text>
+          ) : null}
+        </View>
+      </View>
+    );
+  },
+};
+
+// ==================== EXISTING STORIES ====================
+
 export const Required: Story = {
   render: () => {
     const [value1, setValue1] = useState<string>();
@@ -349,6 +644,7 @@ export const AllStates: Story = {
     const [value2, setValue2] = useState<string>("opt2");
     const [value3, setValue3] = useState<string>();
     const [value4, setValue4] = useState<string>();
+    const [multiValue, setMultiValue] = useState<string[]>(["apple", "banana"]);
 
     return (
       <View style={{ gap: 20, padding: 20, width: "100%", maxWidth: 400 }}>
@@ -418,6 +714,19 @@ export const AllStates: Story = {
             placeholder="Search fruits..."
             searchable
             value={value1}
+          />
+        </View>
+
+        <View style={{ gap: 8 }}>
+          <Text style={{ fontSize: 16, fontWeight: "600" }}>Multi-Select</Text>
+          <Dropdown
+            label="Multi-Select Dropdown"
+            multiple
+            onChange={setMultiValue}
+            options={fruitOptions}
+            placeholder="Select fruits..."
+            showSelectAll
+            value={multiValue}
           />
         </View>
       </View>

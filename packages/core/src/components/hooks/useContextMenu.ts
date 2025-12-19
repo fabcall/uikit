@@ -1,4 +1,3 @@
-// useContextMenu.ts
 import { useDimensions } from "@readykit/hooks";
 import { useCallback, useRef, useState } from "react";
 import type { View } from "react-native";
@@ -9,7 +8,6 @@ export interface ContextMenuConfig {
   itemCount?: number;
   itemHeight?: number;
   extraPadding?: number;
-  /** Gap entre trigger e menu */
   gap?: number;
 }
 
@@ -17,7 +15,6 @@ export interface MenuPosition {
   top: number;
   left: number;
   width: number;
-  /** Indica se o menu abriu para cima */
   openedUpwards: boolean;
 }
 
@@ -25,11 +22,12 @@ export interface UseContextMenuReturn {
   triggerRef: React.RefObject<View | null>;
   position: MenuPosition;
   isOpen: boolean;
-  /** Indica se a posição está sendo calculada */
   isPositioning: boolean;
   open: () => Promise<void>;
   close: () => void;
   toggle: () => void;
+  /** Altura máxima recalculada para caber na tela sem sobrepor o trigger */
+  dynamicMaxHeight: number;
 }
 
 const DEFAULT_POSITION: MenuPosition = {
@@ -39,9 +37,7 @@ const DEFAULT_POSITION: MenuPosition = {
   openedUpwards: false,
 };
 
-export function useContextMenu(
-  config: ContextMenuConfig,
-): UseContextMenuReturn {
+export function useContextMenu(config: ContextMenuConfig): UseContextMenuReturn {
   const {
     position: preferredPosition = "bottom",
     maxHeight,
@@ -57,54 +53,71 @@ export function useContextMenu(
   const [isOpen, setIsOpen] = useState(false);
   const [isPositioning, setIsPositioning] = useState(false);
   const [position, setPosition] = useState<MenuPosition>(DEFAULT_POSITION);
+  const [dynamicMaxHeight, setDynamicMaxHeight] = useState(maxHeight);
 
-  const calculatePosition = useCallback((): Promise<MenuPosition> => {
+  const calculatePosition = useCallback((): Promise<MenuPosition & { adjMaxHeight: number }> => {
     return new Promise((resolve) => {
       if (!triggerRef.current) {
-        resolve(DEFAULT_POSITION);
+        resolve({ ...DEFAULT_POSITION, adjMaxHeight: maxHeight });
         return;
       }
 
       triggerRef.current.measureInWindow((x, y, width, height) => {
-        const spaceBelow = screenHeight - (y + height);
-        const spaceAbove = y;
-        const estimatedMenuHeight =
-          Math.min(itemCount * itemHeight, maxHeight) + extraPadding;
+        const spaceBelow = screenHeight - (y + height) - gap;
+        const spaceAbove = y - gap;
+        
+        // Altura teórica que o conteúdo gostaria de ter
+        const desiredHeight = Math.min(itemCount * itemHeight, maxHeight) + extraPadding;
 
         const shouldOpenUpwards =
           preferredPosition === "top" ||
           (preferredPosition === "bottom" &&
-            spaceBelow < estimatedMenuHeight &&
+            spaceBelow < desiredHeight &&
             spaceAbove > spaceBelow);
 
-        const top = shouldOpenUpwards
-          ? Math.max(0, y - estimatedMenuHeight + gap)
-          : y + height + gap;
+        let finalTop: number;
+        let adjMaxHeight: number;
 
-        const newPosition: MenuPosition = {
+        if (shouldOpenUpwards) {
+          // Limita a altura ao espaço disponível acima
+          const availableHeight = Math.max(0, spaceAbove);
+          const actualMenuHeight = Math.min(desiredHeight, availableHeight);
+          
+          finalTop = y - actualMenuHeight - gap;
+          // A altura do ScrollView interno deve ser a altura total menos o padding do container
+          adjMaxHeight = Math.max(0, actualMenuHeight - extraPadding);
+        } else {
+          // Limita a altura ao espaço disponível abaixo
+          const availableHeight = Math.max(0, spaceBelow);
+          const actualMenuHeight = Math.min(desiredHeight, availableHeight);
+          
+          finalTop = y + height + gap;
+          adjMaxHeight = Math.max(0, actualMenuHeight - extraPadding);
+        }
+
+        resolve({
           left: x,
           width,
-          top,
+          top: finalTop,
           openedUpwards: shouldOpenUpwards,
-        };
-
-        resolve(newPosition);
+          adjMaxHeight,
+        });
       });
     });
-  }, [
-    preferredPosition,
-    maxHeight,
-    itemCount,
-    itemHeight,
-    extraPadding,
-    gap,
-    screenHeight,
-  ]);
+  }, [preferredPosition, maxHeight, itemCount, itemHeight, extraPadding, gap, screenHeight]);
 
   const open = useCallback(async () => {
     setIsPositioning(true);
-    const newPosition = await calculatePosition();
-    setPosition(newPosition);
+    const result = await calculatePosition();
+    
+    setPosition({
+      left: result.left,
+      width: result.width,
+      top: result.top,
+      openedUpwards: result.openedUpwards,
+    });
+    setDynamicMaxHeight(result.adjMaxHeight);
+    
     setIsOpen(true);
     setIsPositioning(false);
   }, [calculatePosition]);
@@ -114,11 +127,8 @@ export function useContextMenu(
   }, []);
 
   const toggle = useCallback(() => {
-    if (isOpen) {
-      close();
-    } else {
-      void open();
-    }
+    if (isOpen) close();
+    else void open();
   }, [isOpen, open, close]);
 
   return {
@@ -129,5 +139,6 @@ export function useContextMenu(
     open,
     close,
     toggle,
+    dynamicMaxHeight,
   };
 }

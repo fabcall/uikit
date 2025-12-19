@@ -8,7 +8,7 @@ export interface DropdownOption<T = string> {
   icon?: ReactNode;
 }
 
-export interface DropdownProps<T = string> extends Omit<ViewProps, "style"> {
+export interface DropdownBaseProps<T = string> extends Omit<ViewProps, "style"> {
   /**
    * Label for the dropdown
    */
@@ -17,14 +17,6 @@ export interface DropdownProps<T = string> extends Omit<ViewProps, "style"> {
    * Placeholder text when no value is selected
    */
   placeholder?: string;
-  /**
-   * Currently selected value
-   */
-  value?: T;
-  /**
-   * Callback when value changes
-   */
-  onChange?: (value: T) => void;
   /**
    * Array of options to display
    */
@@ -69,10 +61,58 @@ export interface DropdownProps<T = string> extends Omit<ViewProps, "style"> {
   emptyMessage?: string;
 }
 
-export interface DropdownItemProps<T = string> extends Omit<
-  ViewProps,
-  "style"
-> {
+export interface DropdownSingleProps<T = string> extends DropdownBaseProps<T> {
+  /**
+   * Enable multi-select mode
+   * @defaultValue false
+   */
+  multiple?: false;
+  /**
+   * Currently selected value (single select)
+   */
+  value?: T;
+  /**
+   * Callback when value changes (single select)
+   */
+  onChange?: (value: T) => void;
+}
+
+export interface DropdownMultipleProps<T = string> extends DropdownBaseProps<T> {
+  /**
+   * Enable multi-select mode
+   */
+  multiple: true;
+  /**
+   * Currently selected values (multi-select)
+   */
+  value?: T[];
+  /**
+   * Callback when values change (multi-select)
+   */
+  onChange?: (value: T[]) => void;
+  /**
+   * Show "Select All" option
+   * @defaultValue false
+   */
+  showSelectAll?: boolean;
+  /**
+   * Custom label for "Select All" option
+   */
+  selectAllLabel?: string;
+  /**
+   * Maximum number of selected items to show in trigger
+   * @defaultValue 3
+   */
+  maxDisplayItems?: number;
+  /**
+   * Custom renderer for selected items count
+   */
+  renderSelectedCount?: (count: number, total: number) => string;
+}
+
+export type DropdownProps<T = string> = DropdownSingleProps<T> | DropdownMultipleProps<T>;
+
+export interface DropdownItemProps<T = string> extends Omit<ViewProps, "style"> {
   /**
    * Label to display
    */
@@ -97,6 +137,10 @@ export interface DropdownItemProps<T = string> extends Omit<
    * Callback when item is pressed
    */
   onPress?: (value: T) => void;
+  /**
+   * Whether in multi-select mode (shows checkbox instead of checkmark)
+   */
+  multiple?: boolean;
 }
 
 export interface DropdownTriggerProps extends Omit<ViewProps, "style"> {

@@ -53,6 +53,14 @@ export const styles = StyleSheet.create((theme) => ({
       },
     ],
   },
+  triggerContent: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
+    gap: theme.spacing[1],
+    paddingVertical: theme.spacing[2],
+  },
   triggerText: {
     ...theme.typography.input,
     flex: 1,
@@ -76,6 +84,40 @@ export const styles = StyleSheet.create((theme) => ({
   },
   triggerIcon: {
     marginLeft: theme.spacing[2],
+  },
+  // Multi-select chips/badges
+  selectedBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: theme.colors.primaryContainer,
+    borderRadius: theme.radii.sm,
+    paddingHorizontal: theme.spacing[2],
+    paddingVertical: theme.spacing[1],
+    gap: theme.spacing[1],
+  },
+  selectedBadgeText: {
+    ...theme.typography.caption,
+    color: theme.colors.onPrimaryContainer,
+  },
+  selectedBadgeRemove: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: theme.colors.onPrimaryContainer,
+    alignItems: "center",
+    justifyContent: "center",
+    opacity: 0.6,
+  },
+  selectedCountBadge: {
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.radii.sm,
+    paddingHorizontal: theme.spacing[2],
+    paddingVertical: theme.spacing[1],
+  },
+  selectedCountText: {
+    ...theme.typography.caption,
+    color: theme.colors.onPrimary,
+    fontFamily: theme.typography.families.semiBold,
   },
   dropdownOverlay: {
     ...StyleSheet.absoluteFillObject,
@@ -110,6 +152,17 @@ export const styles = StyleSheet.create((theme) => ({
   },
   scrollContainer: {
     maxHeight: 300,
+  },
+  // Select All item
+  selectAllItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[3],
+    gap: theme.spacing[2],
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.border,
+    backgroundColor: theme.colors.surfaceHighlight,
   },
   item: {
     flexDirection: "row",
@@ -164,6 +217,34 @@ export const styles = StyleSheet.create((theme) => ({
   checkIcon: {
     marginLeft: "auto",
   },
+  // Checkbox styles for multi-select
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 4,
+    borderWidth: 2,
+    alignItems: "center",
+    justifyContent: "center",
+
+    variants: {
+      checked: {
+        true: {
+          borderColor: theme.colors.primary,
+          backgroundColor: theme.colors.primary,
+        },
+        false: {
+          borderColor: theme.colors.border,
+          backgroundColor: "transparent",
+        },
+      },
+      disabled: {
+        true: {
+          borderColor: theme.colors.border,
+          backgroundColor: theme.colors.border,
+        },
+      },
+    },
+  },
   emptyContainer: {
     padding: theme.spacing[6],
     alignItems: "center",
@@ -173,5 +254,29 @@ export const styles = StyleSheet.create((theme) => ({
     ...theme.typography.body,
     color: theme.colors.textSecondary,
     textAlign: "center",
+  },
+  // Multi-select actions footer
+  actionsFooter: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[3],
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.border,
+    backgroundColor: theme.colors.surfaceHighlight,
+  },
+  actionButton: {
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[2],
+  },
+  actionButtonText: {
+    ...theme.typography.body,
+    color: theme.colors.primary,
+    fontFamily: theme.typography.families.semiBold,
+  },
+  selectedCount: {
+    ...theme.typography.caption,
+    color: theme.colors.textSecondary,
   },
 }));

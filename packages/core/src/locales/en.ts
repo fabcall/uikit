@@ -4,7 +4,9 @@ export const en = {
     close: "Close",
     cancel: "Cancel",
     confirm: "Confirm",
-    selectAll: "Todos",
+    selectAll: "Select All",
+    selected: "Selected",
+    clearAll: "Clear All",
   },
   components: {
     search: {

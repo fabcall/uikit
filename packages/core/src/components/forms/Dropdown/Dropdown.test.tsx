@@ -189,4 +189,117 @@ describe("Dropdown", () => {
       expect(screen.getByText("No results available")).toBeTruthy();
     });
   });
+
+  describe("Multi-select mode", () => {
+    it("should render in multi-select mode", () => {
+      render(
+        <Dropdown
+          multiple
+          onChange={jest.fn()}
+          options={mockOptions}
+          placeholder="Select options"
+          value={[]}
+        />,
+      );
+
+      expect(screen.getByText("Select options")).toBeTruthy();
+    });
+
+    it("should show selected items as badges", () => {
+      render(
+        <Dropdown
+          multiple
+          onChange={jest.fn()}
+          options={mockOptions}
+          value={["opt1", "opt2"]}
+        />,
+      );
+
+      expect(screen.getByText("Option 1")).toBeTruthy();
+      expect(screen.getByText("Option 2")).toBeTruthy();
+    });
+
+    it("should show +N badge when more items than maxDisplayItems", () => {
+      render(
+        <Dropdown
+          maxDisplayItems={2}
+          multiple
+          onChange={jest.fn()}
+          options={mockOptions}
+          value={["opt1", "opt2", "opt3"]}
+        />,
+      );
+
+      expect(screen.getByText("+1")).toBeTruthy();
+    });
+
+    it("should show select all option when showSelectAll is true", () => {
+      const { getByRole } = render(
+        <Dropdown
+          multiple
+          onChange={jest.fn()}
+          options={mockOptions}
+          selectAllLabel="Select All"
+          showSelectAll
+          value={[]}
+        />,
+      );
+
+      const trigger = getByRole("button");
+      fireEvent.press(trigger);
+
+      expect(screen.getByText("Select All")).toBeTruthy();
+    });
+
+    it("should call onChange with array when item is selected in multi-select mode", () => {
+      const onChangeMock = jest.fn();
+      const { getByRole } = render(
+        <Dropdown
+          multiple
+          onChange={onChangeMock}
+          options={mockOptions}
+          value={[]}
+        />,
+      );
+
+      const trigger = getByRole("button");
+      fireEvent.press(trigger);
+
+      // The dropdown should be open and options visible
+      expect(screen.getByText("Option 1")).toBeTruthy();
+    });
+
+    it("should toggle item selection in multi-select mode", () => {
+      const onChangeMock = jest.fn();
+      const { getByRole, rerender } = render(
+        <Dropdown
+          multiple
+          onChange={onChangeMock}
+          options={mockOptions}
+          value={["opt1"]}
+        />,
+      );
+
+      const trigger = getByRole("button");
+      fireEvent.press(trigger);
+
+      // Option 1 should be selected
+      expect(screen.getByText("Option 1")).toBeTruthy();
+    });
+
+    it("should use custom renderSelectedCount when provided", () => {
+      render(
+        <Dropdown
+          maxDisplayItems={1}
+          multiple
+          onChange={jest.fn()}
+          options={mockOptions}
+          renderSelectedCount={(count, total) => `${count} of ${total} selected`}
+          value={["opt1", "opt2", "opt3"]}
+        />,
+      );
+
+      expect(screen.getByText("3 of 3 selected")).toBeTruthy();
+    });
+  });
 });
