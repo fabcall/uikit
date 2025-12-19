@@ -11,7 +11,7 @@ export function ContextMenuSeparator({
     <View
       style={[
         styles.separator,
-        !!spacing && { marginVertical: spacing },
+        spacing && { marginVertical: spacing },
       ]}
     />
   );

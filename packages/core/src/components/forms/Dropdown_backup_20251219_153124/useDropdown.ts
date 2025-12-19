@@ -1,14 +1,13 @@
 import { useCallback, useDeferredValue, useMemo, useState } from "react";
 
-import { useContextMenuPosition } from "../../overlay/ContextMenu";
-import type { DropdownOption } from "./Dropdown.props";
+import { useContextMenu, type UseContextMenuReturn } from "../../hooks";
+import { type DropdownOption } from "./Dropdown.props";
 
 export interface UseDropdownConfigBase<T = string> {
   options: Array<DropdownOption<T>>;
   searchable?: boolean;
-  placement?: "top-start" | "top-end" | "bottom-start" | "bottom-end";
+  position?: "top" | "bottom";
   maxHeight?: number;
-  offset?: number;
   disabled?: boolean;
 }
 
@@ -24,38 +23,75 @@ export interface UseDropdownConfigMultiple<T = string> extends UseDropdownConfig
   onChange?: (value: T[]) => void;
 }
 
-export function useDropdownSingle<T = string>(config: UseDropdownConfigSingle<T>) {
+export type UseDropdownConfig<T = string> =
+  | UseDropdownConfigSingle<T>
+  | UseDropdownConfigMultiple<T>;
+
+export interface UseDropdownReturnBase<T = string>
+  extends Omit<UseContextMenuReturn, "open" | "toggle"> {
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  filteredOptions: Array<DropdownOption<T>>;
+  open: () => void;
+  toggle: () => void;
+  reset: () => void;
+  disabled: boolean;
+}
+
+export interface UseDropdownReturnSingle<T = string> extends UseDropdownReturnBase<T> {
+  multiple: false;
+  selectedOption: DropdownOption<T> | undefined;
+  selectOption: (value: T) => void;
+}
+
+export interface UseDropdownReturnMultiple<T = string> extends UseDropdownReturnBase<T> {
+  multiple: true;
+  selectedOptions: Array<DropdownOption<T>>;
+  toggleOption: (value: T) => void;
+  selectAll: () => void;
+  clearAll: () => void;
+  isAllSelected: boolean;
+}
+
+export type UseDropdownReturn<T = string> =
+  | UseDropdownReturnSingle<T>
+  | UseDropdownReturnMultiple<T>;
+
+const SEARCH_BAR_HEIGHT = 60;
+const BASE_PADDING = 8;
+
+export function useDropdownSingle<T = string>(
+  config: UseDropdownConfigSingle<T>,
+): UseDropdownReturnSingle<T> {
   const {
     options,
     value,
     onChange,
     searchable = false,
-    placement = "bottom-start",
-    offset = 4,
+    position = "bottom",
+    maxHeight = 300,
     disabled = false,
   } = config;
 
-  const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const deferredQuery = useDeferredValue(searchQuery);
 
   const filteredOptions = useMemo(() => {
-    if (!searchable || !deferredQuery.trim()) return options;
+    if (!searchable || !deferredQuery.trim()) {
+      return options;
+    }
     const query = deferredQuery.toLowerCase().trim();
-    return options.filter((opt) => opt.label.toLowerCase().includes(query));
+    return options.filter((option) => option.label.toLowerCase().includes(query));
   }, [options, deferredQuery, searchable]);
 
-  const {
-    triggerRef,
+  const menu = useContextMenu({
     position,
-    measureAndPosition,
-    setContentSize,
-  } = useContextMenuPosition({
-    placement,
-    offset,
-    visible: isOpen,
-    matchTriggerWidth: true, // 🔥 Dropdown behavior
+    maxHeight,
+    itemCount: filteredOptions.length,
+    extraPadding: (searchable ? SEARCH_BAR_HEIGHT : 0) + BASE_PADDING,
   });
+
+  const { close: menuClose, open: menuOpen } = menu;
 
   const selectedOption = useMemo(
     () => options.find((opt) => opt.value === value),
@@ -65,75 +101,83 @@ export function useDropdownSingle<T = string>(config: UseDropdownConfigSingle<T>
   const selectOption = useCallback(
     (optionValue: T) => {
       onChange?.(optionValue);
-      setIsOpen(false);
+      menuClose();
       setSearchQuery("");
     },
-    [onChange],
+    [onChange, menuClose],
   );
 
   const open = useCallback(() => {
     if (!disabled) {
       setSearchQuery("");
-      measureAndPosition();
-      setIsOpen(true);
+      void menuOpen();
     }
-  }, [disabled, measureAndPosition]);
+  }, [disabled, menuOpen]);
 
-  const close = useCallback(() => {
-    setIsOpen(false);
+  const toggle = useCallback(() => {
+    if (menu.isOpen) {
+      menuClose();
+    } else {
+      open();
+    }
+  }, [menu.isOpen, menuClose, open]);
+
+  const reset = useCallback(() => {
     setSearchQuery("");
-  }, []);
+    menuClose();
+  }, [menuClose]);
 
   return {
-    triggerRef,
-    position,
-    isOpen,
+    triggerRef: menu.triggerRef,
+    position: menu.position,
+    isOpen: menu.isOpen,
+    isPositioning: menu.isPositioning,
+    close: menuClose,
+    open,
+    toggle,
     searchQuery,
     setSearchQuery,
     filteredOptions,
     selectedOption,
     selectOption,
-    open,
-    close,
+    reset,
     disabled,
-    measureAndPosition,
-    setContentSize,
-    multiple: false as const,
+    multiple: false,
   };
 }
 
-export function useDropdownMultiple<T = string>(config: UseDropdownConfigMultiple<T>) {
+export function useDropdownMultiple<T = string>(
+  config: UseDropdownConfigMultiple<T>,
+): UseDropdownReturnMultiple<T> {
   const {
     options,
     value = [],
     onChange,
     searchable = false,
-    placement = "bottom-start",
-    offset = 4,
+    position = "bottom",
+    maxHeight = 300,
     disabled = false,
   } = config;
 
-  const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const deferredQuery = useDeferredValue(searchQuery);
 
   const filteredOptions = useMemo(() => {
-    if (!searchable || !deferredQuery.trim()) return options;
+    if (!searchable || !deferredQuery.trim()) {
+      return options;
+    }
     const query = deferredQuery.toLowerCase().trim();
-    return options.filter((opt) => opt.label.toLowerCase().includes(query));
+    return options.filter((option) => option.label.toLowerCase().includes(query));
   }, [options, deferredQuery, searchable]);
 
-  const {
-    triggerRef,
+  const menu = useContextMenu({
     position,
-    measureAndPosition,
-    setContentSize,
-  } = useContextMenuPosition({
-    placement,
-    offset,
-    visible: isOpen,
-    matchTriggerWidth: true, // 🔥 Dropdown behavior
+    maxHeight,
+    itemCount: filteredOptions.length,
+    extraPadding: (searchable ? SEARCH_BAR_HEIGHT : 0) + BASE_PADDING,
   });
+
+  const { close: menuClose, open: menuOpen } = menu;
 
   const selectedOptions = useMemo(
     () => options.filter((opt) => value.includes(opt.value)),
@@ -164,6 +208,7 @@ export function useDropdownMultiple<T = string>(config: UseDropdownConfigMultipl
 
   const selectAll = useCallback(() => {
     const enabledValues = enabledOptions.map((opt) => opt.value);
+    // Mantém as opções desabilitadas que já estavam selecionadas
     const disabledSelectedValues = value.filter((v) => {
       const option = options.find((opt) => opt.value === v);
       return option?.disabled;
@@ -172,6 +217,7 @@ export function useDropdownMultiple<T = string>(config: UseDropdownConfigMultipl
   }, [enabledOptions, options, value, onChange]);
 
   const clearAll = useCallback(() => {
+    // Mantém as opções desabilitadas que estavam selecionadas
     const disabledSelectedValues = value.filter((v) => {
       const option = options.find((opt) => opt.value === v);
       return option?.disabled;
@@ -182,20 +228,31 @@ export function useDropdownMultiple<T = string>(config: UseDropdownConfigMultipl
   const open = useCallback(() => {
     if (!disabled) {
       setSearchQuery("");
-      measureAndPosition();
-      setIsOpen(true);
+      void menuOpen();
     }
-  }, [disabled, measureAndPosition]);
+  }, [disabled, menuOpen]);
 
-  const close = useCallback(() => {
-    setIsOpen(false);
+  const toggle = useCallback(() => {
+    if (menu.isOpen) {
+      menuClose();
+    } else {
+      open();
+    }
+  }, [menu.isOpen, menuClose, open]);
+
+  const reset = useCallback(() => {
     setSearchQuery("");
-  }, []);
+    menuClose();
+  }, [menuClose]);
 
   return {
-    triggerRef,
-    position,
-    isOpen,
+    triggerRef: menu.triggerRef,
+    position: menu.position,
+    isOpen: menu.isOpen,
+    isPositioning: menu.isPositioning,
+    close: menuClose,
+    open,
+    toggle,
     searchQuery,
     setSearchQuery,
     filteredOptions,
@@ -204,11 +261,8 @@ export function useDropdownMultiple<T = string>(config: UseDropdownConfigMultipl
     selectAll,
     clearAll,
     isAllSelected,
-    open,
-    close,
+    reset,
     disabled,
-    measureAndPosition,
-    setContentSize,
-    multiple: true as const,
+    multiple: true,
   };
 }

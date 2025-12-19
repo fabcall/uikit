@@ -1,9 +1,8 @@
-import { useDimensions } from "@readykit/hooks";
-import React, { useEffect, useRef, useState } from "react";
-import type { LayoutRectangle } from "react-native";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   Pressable,
+  ScrollView,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
@@ -14,11 +13,11 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import type { ContextMenuProps } from "./ContextMenu.props";
 import { styles } from "./ContextMenu.styles";
-import { calculatePosition, getArrowPosition } from "./ContextMenu.utils";
+import { getArrowPosition } from "./ContextMenu.utils";
+import { useContextMenuPosition } from "./useContextMenuPosition";
 
 export function ContextMenu({
   children,
@@ -37,23 +36,26 @@ export function ContextMenu({
   respectSafeArea = true,
 }: ContextMenuProps): React.JSX.Element {
   const [internalVisible, setInternalVisible] = useState(false);
-  const [triggerLayout, setTriggerLayout] = useState<LayoutRectangle | null>(
-    null
-  );
-  const [contentSize, setContentSize] = useState({ width: 0, height: 0 });
-  const [position, setPosition] = useState({ top: 0, left: 0, placement });
-  const [arrowPos, setArrowPos] = useState<{ top?: number; left?: number }>(
-    {}
-  );
+  const [arrowPos, setArrowPos] = useState<{ top?: number; left?: number }>({});
 
-  const triggerRef = useRef<View>(null);
-  const safeAreaInsets = useSafeAreaInsets();
-  const { window: windowDimensions } = useDimensions();
+  const visible = controlledVisible ?? internalVisible;
+
+  const {
+    triggerRef,
+    position,
+    contentSize,
+    triggerLayout,
+    measureAndPosition,
+    setContentSize,
+  } = useContextMenuPosition({
+    placement,
+    offset,
+    respectSafeArea,
+    visible,
+  });
 
   const scale = useSharedValue(0.9);
   const opacity = useSharedValue(0);
-
-  const visible = controlledVisible ?? internalVisible;
 
   useEffect(() => {
     if (visible) {
@@ -77,17 +79,9 @@ export function ContextMenu({
     onVisibleChange?.(newVisible);
   };
 
-  const measureTrigger = (): void => {
-    if (triggerRef.current) {
-      triggerRef.current.measureInWindow((x, y, width, height) => {
-        setTriggerLayout({ x, y, width, height });
-      });
-    }
-  };
-
   const handleOpen = (): void => {
     if (disabled) return;
-    measureTrigger();
+    measureAndPosition();
     handleVisibleChange(true);
   };
 
@@ -108,44 +102,20 @@ export function ContextMenu({
   };
 
   useEffect(() => {
-    if (visible && triggerLayout && contentSize.width > 0) {
-      const calculatedPosition = calculatePosition({
+    if (visible && triggerLayout && contentSize.width > 0 && showArrow) {
+      const arrowPosition = getArrowPosition(
+        position.placement,
         triggerLayout,
-        contentSize,
-        placement,
-        offset,
-        safeAreaInsets,
-        respectSafeArea,
-        windowDimensions,
-      });
-
-      setPosition(calculatedPosition);
-
-      if (showArrow) {
-        const arrowPosition = getArrowPosition(
-          calculatedPosition.placement,
-          triggerLayout,
-          {
-            top: calculatedPosition.top,
-            left: calculatedPosition.left,
-            width: contentSize.width,
-            height: contentSize.height,
-          }
-        );
-        setArrowPos(arrowPosition);
-      }
+        {
+          top: position.top,
+          left: position.left,
+          width: contentSize.width,
+          height: contentSize.height,
+        }
+      );
+      setArrowPos(arrowPosition);
     }
-  }, [
-    visible,
-    triggerLayout,
-    contentSize,
-    placement,
-    offset,
-    safeAreaInsets,
-    respectSafeArea,
-    showArrow,
-    windowDimensions,
-  ]);
+  }, [visible, triggerLayout, contentSize, position, showArrow]);
 
   const handleContentLayout = (event: {
     nativeEvent: { layout: { width: number; height: number } };
@@ -195,6 +165,8 @@ export function ContextMenu({
                   {
                     top: position.top,
                     left: position.left,
+                    ...(position.width ? { width: position.width } : {}),
+                    ...(position.height ? { maxHeight: position.height } : {}),
                   },
                   animatedStyle,
                   contentStyle,
@@ -210,11 +182,16 @@ export function ContextMenu({
                   />
                 ) : null}
                 
-                <ContextMenuContext.Provider
-                  value={{ closeMenu: closeOnSelect ? handleClose : undefined }}
+                <ScrollView
+                  showsVerticalScrollIndicator={false}
+                  style={{ maxHeight: position.height }}
                 >
-                  {content}
-                </ContextMenuContext.Provider>
+                  <ContextMenuContext.Provider
+                    value={{ closeMenu: closeOnSelect ? handleClose : undefined }}
+                  >
+                    {content}
+                  </ContextMenuContext.Provider>
+                </ScrollView>
               </Animated.View>
             </TouchableWithoutFeedback>
           </Animated.View>

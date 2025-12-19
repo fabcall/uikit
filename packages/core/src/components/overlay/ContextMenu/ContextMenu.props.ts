@@ -20,6 +20,8 @@ export type TriggerAction = "press" | "longPress" | "hover";
 export interface ContextMenuPosition {
   top: number;
   left: number;
+  width?: number;
+  height?: number;
   placement: Placement;
 }
 
@@ -38,7 +40,6 @@ export interface ContextMenuProps {
   contentStyle?: ViewStyle;
   arrowStyle?: ViewStyle;
   respectSafeArea?: boolean;
-  avoidKeyboard?: boolean;
 }
 
 export interface ContextMenuItemProps {

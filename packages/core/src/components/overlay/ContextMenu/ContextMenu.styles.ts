@@ -22,6 +22,7 @@ export const styles = StyleSheet.create((theme) => ({
     minWidth: 150,
     maxWidth: 300,
     paddingVertical: theme.spacing[1],
+    overflow: "hidden", // 🔥 Previne overflow
   },
   arrow: {
     position: "absolute",
@@ -127,5 +128,8 @@ export const styles = StyleSheet.create((theme) => ({
     height: 1,
     backgroundColor: theme.colors.border,
     marginVertical: theme.spacing[1],
+  },
+  scrollContent: {
+    flexGrow: 0, // Não força crescimento
   },
 }));
