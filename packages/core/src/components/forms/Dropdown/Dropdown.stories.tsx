@@ -1,7 +1,7 @@
 import { Download, Upload, User } from "@readykit/icons";
 import type { Meta, StoryObj } from "@storybook/react-native";
 import React, { useState } from "react";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 
 import { Icon } from "../../data-display/Icon";
 import { Text } from "../../data-display/Text";
@@ -780,48 +780,88 @@ export const PositioningEdgeCases: Story = {
   },
 };
 
-export const ForcePosition: Story = {
+export const ForcePlacement: Story = {
   render: () => {
-    const [topValue, setTopValue] = useState<string>();
-    const [bottomValue, setBottomValue] = useState<string>();
+    const [topStartValue, setTopStartValue] = useState<string>();
+    const [topEndValue, setTopEndValue] = useState<string>();
+    const [bottomStartValue, setBottomStartValue] = useState<string>();
+    const [bottomEndValue, setBottomEndValue] = useState<string>();
 
     return (
-      <View style={{ gap: 20, padding: 20 }}>
+      <ScrollView style={{ gap: 20, padding: 20 }}>
         <View style={{ gap: 16 }}>
           <Text style={{ fontSize: 18, fontWeight: "600" }}>
-            Force Open Upward
+            Force Open Upward (top-start)
           </Text>
           <Text color="secondary" style={{ marginBottom: 8 }}>
-            {`Using position="top" prop to force upward opening`}
+            {`Using placement="top-start" prop to force upward opening, aligned to start`}
           </Text>
           <Dropdown
-            label="Forced Top Position"
-            onChange={setTopValue}
+            label="Forced Top-Start Position"
+            onChange={setTopStartValue}
             options={fruitOptions}
             placeholder="Always opens upward"
-            position="top"
-            value={topValue}
+            placement="top-start"
+            value={topStartValue}
           />
         </View>
 
-        <View style={{ gap: 16, marginTop: 300 }}>
+        <View style={{ gap: 16 }}>
           <Text style={{ fontSize: 18, fontWeight: "600" }}>
-            Force Open Downward
+            Force Open Upward (top-end)
           </Text>
           <Text color="secondary" style={{ marginBottom: 8 }}>
-            {`Using position="bottom" prop, but auto-adjusts if no space`}
+            {`Using placement="top-end" prop to force upward opening, aligned to end`}
           </Text>
           <Dropdown
-            label="Bottom Position (auto-adjusts)"
-            onChange={setBottomValue}
-            options={countryOptions}
-            placeholder="Tries to open downward"
-            position="bottom"
-            searchable
-            value={bottomValue}
+            label="Forced Top-End Position"
+            onChange={setTopEndValue}
+            options={fruitOptions}
+            placeholder="Always opens upward (end aligned)"
+            placement="top-end"
+            value={topEndValue}
           />
         </View>
-      </View>
+
+        <View style={{ gap: 16, marginTop: 200 }}>
+          <Text style={{ fontSize: 18, fontWeight: "600" }}>
+            Force Open Downward (bottom-start)
+          </Text>
+          <Text color="secondary" style={{ marginBottom: 8 }}>
+            {`Using placement="bottom-start" prop (default behavior)`}
+          </Text>
+          <Dropdown
+            label="Bottom-Start Position"
+            onChange={setBottomStartValue}
+            options={countryOptions}
+            placeholder="Opens downward (default)"
+            placement="bottom-start"
+            searchable
+            value={bottomStartValue}
+          />
+        </View>
+
+        <View style={{ gap: 16 }}>
+          <Text style={{ fontSize: 18, fontWeight: "600" }}>
+            Force Open Downward (bottom-end)
+          </Text>
+          <Text color="secondary" style={{ marginBottom: 8 }}>
+            {`Using placement="bottom-end" prop for end alignment`}
+          </Text>
+          <Dropdown
+            label="Bottom-End Position"
+            onChange={setBottomEndValue}
+            options={countryOptions}
+            placeholder="Opens downward (end aligned)"
+            placement="bottom-end"
+            searchable
+            value={bottomEndValue}
+          />
+        </View>
+      </ScrollView>
     );
   },
 };
+
+// Keep the old story name as an alias for backwards compatibility
+export const ForcePosition = ForcePlacement;

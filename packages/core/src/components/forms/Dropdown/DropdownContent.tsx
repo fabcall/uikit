@@ -29,7 +29,7 @@ export const DropdownContent = forwardRef<ViewType, DropdownContentProps>(
     const hasItems = childrenArray.length > 0;
 
     return (
-      <View ref={ref} style={styles.dropdownContent} {...props}>
+      <View ref={ref} style={[styles.dropdownContent, { maxHeight }]} {...props}>
         {searchable ? (
           <View style={styles.searchContainer}>
             <TextInput
@@ -46,7 +46,7 @@ export const DropdownContent = forwardRef<ViewType, DropdownContentProps>(
         <ScrollView
           keyboardShouldPersistTaps="handled"
           nestedScrollEnabled
-          style={[styles.scrollContainer, { maxHeight }]}
+          style={styles.scrollContainer}
         >
           {hasItems ? (
             children

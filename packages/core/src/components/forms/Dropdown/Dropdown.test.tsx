@@ -190,6 +190,49 @@ describe("Dropdown", () => {
     });
   });
 
+  describe("Placement", () => {
+    it("should accept placement prop", () => {
+      const { getByRole } = render(
+        <Dropdown
+          onChange={jest.fn()}
+          options={mockOptions}
+          placement="top-start"
+        />,
+      );
+
+      const trigger = getByRole("button");
+      expect(trigger).toBeTruthy();
+    });
+
+    it("should accept all placement values", () => {
+      const placements = ["top-start", "top-end", "bottom-start", "bottom-end"] as const;
+      
+      placements.forEach((placement) => {
+        const { unmount } = render(
+          <Dropdown
+            onChange={jest.fn()}
+            options={mockOptions}
+            placement={placement}
+          />,
+        );
+        unmount();
+      });
+    });
+
+    it("should accept offset prop", () => {
+      const { getByRole } = render(
+        <Dropdown
+          offset={8}
+          onChange={jest.fn()}
+          options={mockOptions}
+        />,
+      );
+
+      const trigger = getByRole("button");
+      expect(trigger).toBeTruthy();
+    });
+  });
+
   describe("Multi-select mode", () => {
     it("should render in multi-select mode", () => {
       render(
@@ -300,6 +343,21 @@ describe("Dropdown", () => {
       );
 
       expect(screen.getByText("3 of 3 selected")).toBeTruthy();
+    });
+
+    it("should accept placement prop in multi-select mode", () => {
+      const { getByRole } = render(
+        <Dropdown
+          multiple
+          onChange={jest.fn()}
+          options={mockOptions}
+          placement="top-start"
+          value={[]}
+        />,
+      );
+
+      const trigger = getByRole("button");
+      expect(trigger).toBeTruthy();
     });
   });
 });

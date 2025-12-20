@@ -151,7 +151,7 @@ export const styles = StyleSheet.create((theme) => ({
     backgroundColor: theme.colors.background,
   },
   scrollContainer: {
-    maxHeight: 300,
+    flex: 1,
   },
   // Select All item
   selectAllItem: {

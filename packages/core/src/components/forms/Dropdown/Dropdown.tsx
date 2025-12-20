@@ -124,7 +124,8 @@ function DropdownSingleComponent<T>(
     searchable = false,
     searchPlaceholder = "Search...",
     maxHeight = 300,
-    position = "bottom",
+    placement = "bottom-start",
+    offset = 4,
     emptyMessage = "No options found",
     forwardedRef,
     ...restProps
@@ -135,7 +136,8 @@ function DropdownSingleComponent<T>(
     value,
     onChange,
     searchable,
-    position,
+    placement,
+    offset,
     maxHeight,
     disabled,
   });
@@ -167,17 +169,17 @@ function DropdownSingleComponent<T>(
 
       <Modal
         animationType="fade"
-        onRequestClose={dropdown.reset}
+        onRequestClose={dropdown.close}
         transparent
         visible={dropdown.isOpen}
       >
-        <Pressable onPress={dropdown.reset} style={styles.dropdownOverlay}>
+        <Pressable onPress={dropdown.close} style={styles.dropdownOverlay}>
           <View
             onStartShouldSetResponder={() => true}
             style={[{ position: "absolute" }, dropdown.position]}
           >
             <DropdownContent
-              maxHeight={maxHeight}
+              maxHeight={dropdown.position.maxHeight}
               onSearchChange={dropdown.setSearchQuery}
               searchPlaceholder={searchPlaceholder}
               searchValue={dropdown.searchQuery}
@@ -229,7 +231,8 @@ function DropdownMultipleComponent<T>(
     searchable = false,
     searchPlaceholder = "Search...",
     maxHeight = 300,
-    position = "bottom",
+    placement = "bottom-start",
+    offset = 4,
     emptyMessage = "No options found",
     showSelectAll = false,
     selectAllLabel: selectAllLabelProp,
@@ -247,7 +250,8 @@ function DropdownMultipleComponent<T>(
     value,
     onChange,
     searchable,
-    position,
+    placement,
+    offset,
     maxHeight,
     disabled,
   });
@@ -295,17 +299,17 @@ function DropdownMultipleComponent<T>(
 
       <Modal
         animationType="fade"
-        onRequestClose={dropdown.reset}
+        onRequestClose={dropdown.close}
         transparent
         visible={dropdown.isOpen}
       >
-        <Pressable onPress={dropdown.reset} style={styles.dropdownOverlay}>
+        <Pressable onPress={dropdown.close} style={styles.dropdownOverlay}>
           <View
             onStartShouldSetResponder={() => true}
             style={[{ position: "absolute" }, dropdown.position]}
           >
             <DropdownContent
-              maxHeight={maxHeight}
+              maxHeight={dropdown.position.maxHeight}
               onSearchChange={dropdown.setSearchQuery}
               searchPlaceholder={searchPlaceholder}
               searchValue={dropdown.searchQuery}
@@ -411,11 +415,12 @@ function DropdownMultipleComponent<T>(
  *
  * @example
  * ```tsx
- * // With search
+ * // With search and forced top placement
  * <Dropdown
  *   label="Select a country"
  *   searchable
  *   searchPlaceholder="Search countries..."
+ *   placement="top-start"
  *   value={country}
  *   onChange={setCountry}
  *   options={countries}
