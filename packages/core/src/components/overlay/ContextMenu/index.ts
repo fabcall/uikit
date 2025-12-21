@@ -1,24 +1,17 @@
-import { ContextMenu as ContextMenuComponent } from "./ContextMenu";
-import type {
-  ContextMenuItemProps,
-  ContextMenuProps,
-  ContextMenuSeparatorProps,
-} from "./ContextMenu.props";
-import { ContextMenuItem } from "./ContextMenuItem";
-import { ContextMenuScrollable } from "./ContextMenuScrollable";
-import { ContextMenuSeparator } from "./ContextMenuSeparator";
-
-export const ContextMenu = Object.assign(ContextMenuComponent, {
-  Item: ContextMenuItem,
-  Separator: ContextMenuSeparator,
-  Scrollable: ContextMenuScrollable,
-});
-
+export { ContextMenu } from "./ContextMenu";
+export {
+  useContextMenu,
+  useContextMenuContext,
+  useContextMenuPositioning,
+} from "./ContextMenu.context";
 export type {
-  ContextMenuItemProps,
+  CollisionBoundary,
+  ComputedPosition,
+  ContextMenuContentProps,
   ContextMenuProps,
-  ContextMenuSeparatorProps,
-};
-
-export { useContextMenu } from "./ContextMenu";
-export type { UseContextMenuPositionConfig, UseContextMenuPositionReturn } from "./useContextMenuPosition";
+  ContextMenuTriggerProps,
+  Placement,
+  PositioningConfig,
+  TriggerMeasurements,
+} from "./ContextMenu.props";
+export { calculatePosition } from "./positioning";

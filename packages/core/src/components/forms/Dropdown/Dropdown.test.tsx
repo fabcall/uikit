@@ -204,8 +204,13 @@ describe("Dropdown", () => {
       expect(trigger).toBeTruthy();
     });
 
-    it("should accept all placement values", () => {
-      const placements = ["top-start", "top-end", "bottom-start", "bottom-end"] as const;
+    it("should accept all 12 placement values", () => {
+      const placements = [
+        "top-start", "top", "top-end",
+        "bottom-start", "bottom", "bottom-end",
+        "left-start", "left", "left-end",
+        "right-start", "right", "right-end"
+      ] as const;
       
       placements.forEach((placement) => {
         const { unmount } = render(
@@ -223,6 +228,32 @@ describe("Dropdown", () => {
       const { getByRole } = render(
         <Dropdown
           offset={8}
+          onChange={jest.fn()}
+          options={mockOptions}
+        />,
+      );
+
+      const trigger = getByRole("button");
+      expect(trigger).toBeTruthy();
+    });
+
+    it("should accept minHeight prop", () => {
+      const { getByRole } = render(
+        <Dropdown
+          minHeight={150}
+          onChange={jest.fn()}
+          options={mockOptions}
+        />,
+      );
+
+      const trigger = getByRole("button");
+      expect(trigger).toBeTruthy();
+    });
+
+    it("should accept collisionDetection prop", () => {
+      const { getByRole } = render(
+        <Dropdown
+          collisionDetection={false}
           onChange={jest.fn()}
           options={mockOptions}
         />,
@@ -314,7 +345,7 @@ describe("Dropdown", () => {
 
     it("should toggle item selection in multi-select mode", () => {
       const onChangeMock = jest.fn();
-      const { getByRole, rerender } = render(
+      const { getByRole } = render(
         <Dropdown
           multiple
           onChange={onChangeMock}

@@ -1,5 +1,6 @@
 import React, { forwardRef } from "react";
 import {
+  type LayoutChangeEvent,
   ScrollView,
   TextInput,
   View,
@@ -11,7 +12,9 @@ import { Text } from "../../data-display/Text";
 import type { DropdownContentProps } from "./Dropdown.props";
 import { styles } from "./Dropdown.styles";
 
-export const DropdownContent = forwardRef<ViewType, DropdownContentProps>(
+export const DropdownContent = forwardRef<ViewType, DropdownContentProps & {
+  onLayout?: (event: LayoutChangeEvent) => void;
+}>(
   (
     {
       children,
@@ -20,6 +23,7 @@ export const DropdownContent = forwardRef<ViewType, DropdownContentProps>(
       searchPlaceholder = "Search...",
       searchValue = "",
       onSearchChange,
+      onLayout,
       ...props
     },
     ref,
@@ -29,7 +33,12 @@ export const DropdownContent = forwardRef<ViewType, DropdownContentProps>(
     const hasItems = childrenArray.length > 0;
 
     return (
-      <View ref={ref} style={[styles.dropdownContent, { maxHeight }]} {...props}>
+      <View 
+        ref={ref} 
+        style={[styles.dropdownContent, { maxHeight }]} 
+        onLayout={onLayout}
+        {...props}
+      >
         {searchable ? (
           <View style={styles.searchContainer}>
             <TextInput

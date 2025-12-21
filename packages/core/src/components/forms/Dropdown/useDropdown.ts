@@ -1,16 +1,20 @@
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
-import { Dimensions, type View as ViewType } from "react-native";
+import type { View as ViewType } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import type { Placement } from "../../overlay/ContextMenu";
+import { calculatePosition } from "../../overlay/ContextMenu/positioning";
 import type { DropdownOption } from "./Dropdown.props";
 
 export interface UseDropdownConfigBase<T = string> {
   options: Array<DropdownOption<T>>;
   searchable?: boolean;
-  placement?: "top-start" | "top-end" | "bottom-start" | "bottom-end";
+  placement?: Placement;
   maxHeight?: number;
+  minHeight?: number;
   offset?: number;
   disabled?: boolean;
+  collisionDetection?: boolean;
 }
 
 export interface UseDropdownConfigSingle<T = string> extends UseDropdownConfigBase<T> {
@@ -26,13 +30,14 @@ export interface UseDropdownConfigMultiple<T = string> extends UseDropdownConfig
 }
 
 interface DropdownPosition {
-  top: number;
-  left: number;
-  width: number;
-  /**
-   * Dynamic maxHeight that may be reduced if there's not enough space
-   */
+  top?: number;
+  bottom?: number;
+  left?: number;
+  right?: number;
+  width?: number;
   maxHeight: number;
+  placement: Placement;
+  adjusted: boolean;
 }
 
 export interface UseDropdownReturnSingle<T> {
@@ -48,6 +53,8 @@ export interface UseDropdownReturnSingle<T> {
   close: () => void;
   disabled: boolean;
   measureAndPosition: () => void;
+  contentSize: { width: number; height: number } | null;
+  setContentSize: (size: { width: number; height: number } | null) => void;
   multiple: false;
 }
 
@@ -67,108 +74,110 @@ export interface UseDropdownReturnMultiple<T> {
   close: () => void;
   disabled: boolean;
   measureAndPosition: () => void;
+  contentSize: { width: number; height: number } | null;
+  setContentSize: (size: { width: number; height: number } | null) => void;
   multiple: true;
 }
 
-// Minimum height for dropdown content (ensures usability)
-const MIN_DROPDOWN_HEIGHT = 100;
-
-function useDropdownPosition(config: {
-  placement: "top-start" | "top-end" | "bottom-start" | "bottom-end";
+function useDropdownPositioning(config: {
+  placement?: Placement;
   offset: number;
   maxHeight: number;
+  minHeight: number;
   visible: boolean;
+  collisionDetection: boolean;
+  contentSize: { width: number; height: number } | null;
 }) {
-  const { placement, offset, maxHeight, visible } = config;
+  const { placement = "bottom-start", offset, maxHeight, minHeight, visible, collisionDetection, contentSize } = config;
   const triggerRef = useRef<ViewType>(null);
   const insets = useSafeAreaInsets();
+  const [triggerSize, setTriggerSize] = useState<{ width: number; height: number } | null>(null);
   
   const [position, setPosition] = useState<DropdownPosition>({
     top: 0,
     left: 0,
     width: 0,
     maxHeight,
+    placement,
+    adjusted: false,
   });
 
   const measureAndPosition = useCallback(() => {
     if (!triggerRef.current) return;
 
     triggerRef.current.measureInWindow((x, y, width, height) => {
-      const windowWidth = Dimensions.get("window").width;
-      
-      const isTopPlacement = placement.startsWith("top");
-      const isEndAligned = placement.endsWith("end");
-      
-      // Calculate available space (respecting safe areas)
-      const availableSpaceAbove = y - insets.top;
-      
-      // Calculate horizontal position
-      let left = x;
-      if (isEndAligned) {
-        // For end alignment with matchTriggerWidth, left stays the same
-        left = x;
-      }
-      
-      // Ensure horizontal bounds
-      const maxLeft = windowWidth - width - 8; // 8px padding from edge
-      left = Math.max(8, Math.min(left, maxLeft));
-      
-      let newPosition: DropdownPosition;
-      
-      if (isTopPlacement) {
-        // For top placement: position dropdown ABOVE the trigger
-        // Calculate available height and shrink if needed
-        const availableHeight = availableSpaceAbove - offset;
-        const actualMaxHeight = Math.max(
-          Math.min(maxHeight, availableHeight),
-          MIN_DROPDOWN_HEIGHT
-        );
-        
-        // Position using 'top' - the dropdown's top edge starts at:
-        // trigger's Y position - offset - content height
-        // But since we don't know exact content height, we position the 
-        // bottom of the dropdown at (triggerY - offset)
-        // 
-        // In RN absolute positioning, we use 'top' to position from top of screen
-        // So: top = triggerY - offset - actualMaxHeight
-        const top = y - offset - actualMaxHeight;
-        
-        newPosition = {
-          top: Math.max(insets.top, top), // Don't go above safe area
-          left,
+      // Track trigger size changes
+      setTriggerSize({ width, height });
+
+      const computedPosition = calculatePosition(
+        {
+          x,
+          y,
           width,
-          maxHeight: actualMaxHeight,
-        };
-      } else {
-        // For bottom placement: position dropdown BELOW the trigger
-        const top = y + height + offset;
-        
-        // Calculate available height and shrink if needed  
-        const windowHeight = Dimensions.get("window").height;
-        const availableSpaceBelow = windowHeight - (y + height) - insets.bottom;
-        const availableHeight = availableSpaceBelow - offset;
-        const actualMaxHeight = Math.max(
-          Math.min(maxHeight, availableHeight),
-          MIN_DROPDOWN_HEIGHT
-        );
-        
-        newPosition = {
-          top,
-          left,
-          width,
-          maxHeight: actualMaxHeight,
-        };
-      }
-      
-      setPosition(newPosition);
+          height,
+          pageX: x,
+          pageY: y,
+        },
+        {
+          placement,
+          offset,
+          matchTriggerWidth: true,
+          maxHeight,
+          minHeight,
+          collisionDetection,
+          screenPadding: 8,
+        },
+        {
+          top: insets.top,
+          right: insets.right,
+          bottom: insets.bottom,
+          left: insets.left,
+        },
+        contentSize ?? undefined
+      );
+
+      setPosition({
+        top: computedPosition.top,
+        bottom: computedPosition.bottom,
+        left: computedPosition.left,
+        right: computedPosition.right,
+        width: computedPosition.width,
+        maxHeight: computedPosition.maxHeight!,
+        placement: computedPosition.placement,
+        adjusted: computedPosition.adjusted,
+      });
     });
-  }, [placement, offset, maxHeight, insets]);
+  }, [placement, offset, maxHeight, minHeight, collisionDetection, insets, contentSize]);
 
   useEffect(() => {
     if (visible) {
       measureAndPosition();
     }
   }, [visible, measureAndPosition]);
+
+  useEffect(() => {
+    if (visible && contentSize) {
+      measureAndPosition();
+    }
+  }, [contentSize, visible, measureAndPosition]);
+
+  // Monitor trigger size changes (for multi-select growing)
+  useEffect(() => {
+    if (!visible) return;
+
+    const interval = setInterval(() => {
+      if (!triggerRef.current) return;
+      
+      triggerRef.current.measureInWindow((x, y, width, height) => {
+        if (triggerSize && (triggerSize.width !== width || triggerSize.height !== height)) {
+          // Trigger size changed - reposition
+          measureAndPosition();
+        }
+      });
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [visible, triggerSize, measureAndPosition]);
 
   return {
     triggerRef,
@@ -183,14 +192,17 @@ export function useDropdownSingle<T = string>(config: UseDropdownConfigSingle<T>
     value,
     onChange,
     searchable = false,
-    placement = "bottom-start",
+    placement,
     offset = 4,
     maxHeight = 300,
+    minHeight = 100,
     disabled = false,
+    collisionDetection = true,
   } = config;
 
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [contentSize, setContentSize] = useState<{ width: number; height: number } | null>(null);
   const deferredQuery = useDeferredValue(searchQuery);
 
   const filteredOptions = useMemo(() => {
@@ -203,11 +215,14 @@ export function useDropdownSingle<T = string>(config: UseDropdownConfigSingle<T>
     triggerRef,
     position,
     measureAndPosition,
-  } = useDropdownPosition({
+  } = useDropdownPositioning({
     placement,
     offset,
     maxHeight,
+    minHeight,
     visible: isOpen,
+    collisionDetection,
+    contentSize,
   });
 
   const selectedOption = useMemo(
@@ -227,6 +242,7 @@ export function useDropdownSingle<T = string>(config: UseDropdownConfigSingle<T>
   const open = useCallback(() => {
     if (!disabled) {
       setSearchQuery("");
+      setContentSize(null);
       measureAndPosition();
       setIsOpen(true);
     }
@@ -235,6 +251,7 @@ export function useDropdownSingle<T = string>(config: UseDropdownConfigSingle<T>
   const close = useCallback(() => {
     setIsOpen(false);
     setSearchQuery("");
+    setContentSize(null);
   }, []);
 
   return {
@@ -250,6 +267,8 @@ export function useDropdownSingle<T = string>(config: UseDropdownConfigSingle<T>
     close,
     disabled,
     measureAndPosition,
+    contentSize,
+    setContentSize,
     multiple: false as const,
   };
 }
@@ -260,14 +279,17 @@ export function useDropdownMultiple<T = string>(config: UseDropdownConfigMultipl
     value = [],
     onChange,
     searchable = false,
-    placement = "bottom-start",
+    placement,
     offset = 4,
     maxHeight = 300,
+    minHeight = 100,
     disabled = false,
+    collisionDetection = true,
   } = config;
 
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [contentSize, setContentSize] = useState<{ width: number; height: number } | null>(null);
   const deferredQuery = useDeferredValue(searchQuery);
 
   const filteredOptions = useMemo(() => {
@@ -280,11 +302,14 @@ export function useDropdownMultiple<T = string>(config: UseDropdownConfigMultipl
     triggerRef,
     position,
     measureAndPosition,
-  } = useDropdownPosition({
+  } = useDropdownPositioning({
     placement,
     offset,
     maxHeight,
+    minHeight,
     visible: isOpen,
+    collisionDetection,
+    contentSize,
   });
 
   const selectedOptions = useMemo(
@@ -334,6 +359,7 @@ export function useDropdownMultiple<T = string>(config: UseDropdownConfigMultipl
   const open = useCallback(() => {
     if (!disabled) {
       setSearchQuery("");
+      setContentSize(null);
       measureAndPosition();
       setIsOpen(true);
     }
@@ -342,6 +368,7 @@ export function useDropdownMultiple<T = string>(config: UseDropdownConfigMultipl
   const close = useCallback(() => {
     setIsOpen(false);
     setSearchQuery("");
+    setContentSize(null);
   }, []);
 
   return {
@@ -360,6 +387,8 @@ export function useDropdownMultiple<T = string>(config: UseDropdownConfigMultipl
     close,
     disabled,
     measureAndPosition,
+    contentSize,
+    setContentSize,
     multiple: true as const,
   };
 }

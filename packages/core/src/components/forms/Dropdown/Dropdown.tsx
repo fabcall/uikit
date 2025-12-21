@@ -124,9 +124,11 @@ function DropdownSingleComponent<T>(
     searchable = false,
     searchPlaceholder = "Search...",
     maxHeight = 300,
-    placement = "bottom-start",
+    minHeight = 100,
+    placement,
     offset = 4,
     emptyMessage = "No options found",
+    collisionDetection = true,
     forwardedRef,
     ...restProps
   } = props;
@@ -139,7 +141,9 @@ function DropdownSingleComponent<T>(
     placement,
     offset,
     maxHeight,
+    minHeight,
     disabled,
+    collisionDetection,
   });
 
   styles.useVariants({
@@ -184,6 +188,10 @@ function DropdownSingleComponent<T>(
               searchPlaceholder={searchPlaceholder}
               searchValue={dropdown.searchQuery}
               searchable={searchable}
+              onLayout={(event) => {
+                const { width, height } = event.nativeEvent.layout;
+                dropdown.setContentSize({ width, height });
+              }}
             >
               {dropdown.filteredOptions.length > 0 ? (
                 dropdown.filteredOptions.map((option) => (
@@ -231,13 +239,15 @@ function DropdownMultipleComponent<T>(
     searchable = false,
     searchPlaceholder = "Search...",
     maxHeight = 300,
-    placement = "bottom-start",
+    minHeight = 100,
+    placement,
     offset = 4,
     emptyMessage = "No options found",
     showSelectAll = false,
     selectAllLabel: selectAllLabelProp,
     maxDisplayItems = 3,
     renderSelectedCount,
+    collisionDetection = true,
     forwardedRef,
     ...restProps
   } = props;
@@ -253,7 +263,9 @@ function DropdownMultipleComponent<T>(
     placement,
     offset,
     maxHeight,
+    minHeight,
     disabled,
+    collisionDetection,
   });
 
   const selectAllLabel = selectAllLabelProp ?? t("common.selectAll");
@@ -381,7 +393,8 @@ function DropdownMultipleComponent<T>(
  * Dropdown Component
  *
  * A flexible dropdown/select component with optional search functionality
- * and multi-select support. Uses the compound component pattern for advanced customization.
+ * and multi-select support. Now uses the ContextMenu positioning API for
+ * intelligent placement with automatic collision detection.
  *
  * @example
  * ```tsx
@@ -401,7 +414,7 @@ function DropdownMultipleComponent<T>(
  *
  * @example
  * ```tsx
- * // Multi-select usage
+ * // Multi-select usage with collision detection
  * <Dropdown
  *   label="Select fruits"
  *   placeholder="Choose fruits..."
@@ -410,20 +423,37 @@ function DropdownMultipleComponent<T>(
  *   onChange={setSelectedFruits}
  *   options={fruits}
  *   showSelectAll
+ *   collisionDetection
  * />
  * ```
  *
  * @example
  * ```tsx
- * // With search and forced top placement
+ * // With search and explicit top placement (will shrink/flip if needed)
  * <Dropdown
  *   label="Select a country"
  *   searchable
  *   searchPlaceholder="Search countries..."
  *   placement="top-start"
+ *   minHeight={150}
  *   value={country}
  *   onChange={setCountry}
  *   options={countries}
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // All 12 placement options are supported:
+ * // top-start, top, top-end
+ * // bottom-start, bottom, bottom-end
+ * // left-start, left, left-end
+ * // right-start, right, right-end
+ * <Dropdown
+ *   placement="right"
+ *   options={options}
+ *   value={value}
+ *   onChange={setValue}
  * />
  * ```
  */
