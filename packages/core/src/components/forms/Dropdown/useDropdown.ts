@@ -3,7 +3,7 @@ import type { View as ViewType } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import type { Placement } from "../../overlay/ContextMenu";
-import { calculatePosition } from "../../overlay/ContextMenu/positioning";
+import { calculatePosition } from "../../overlay/positioning";
 import type { DropdownOption } from "./Dropdown.props";
 
 export interface UseDropdownConfigBase<T = string> {

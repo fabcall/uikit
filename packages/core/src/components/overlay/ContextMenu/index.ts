@@ -14,4 +14,3 @@ export type {
   PositioningConfig,
   TriggerMeasurements,
 } from "./ContextMenu.props";
-export { calculatePosition } from "./positioning";

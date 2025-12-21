@@ -8,6 +8,7 @@ import React, {
 import { type View as ViewType } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { calculatePosition } from "../positioning";
 import type {
   ComputedPosition,
   ContextMenuContextValue,
@@ -15,7 +16,6 @@ import type {
   PositioningConfig,
   TriggerMeasurements,
 } from "./ContextMenu.props";
-import { calculatePosition } from "./positioning";
 
 const ContextMenuContext = createContext<ContextMenuContextValue | null>(null);
 
