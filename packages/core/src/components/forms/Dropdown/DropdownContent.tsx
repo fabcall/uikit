@@ -2,19 +2,21 @@ import React, { forwardRef } from "react";
 import {
   type LayoutChangeEvent,
   ScrollView,
+  Text,
   TextInput,
   View,
   type View as ViewType,
 } from "react-native";
-import { useUnistyles } from "react-native-unistyles";
 
-import { Text } from "../../data-display/Text";
 import type { DropdownContentProps } from "./Dropdown.props";
 import { styles } from "./Dropdown.styles";
 
-export const DropdownContent = forwardRef<ViewType, DropdownContentProps & {
-  onLayout?: (event: LayoutChangeEvent) => void;
-}>(
+export const DropdownContent = forwardRef<
+  ViewType,
+  DropdownContentProps & {
+    onLayout?: (event: LayoutChangeEvent) => void;
+  }
+>(
   (
     {
       children,
@@ -28,14 +30,13 @@ export const DropdownContent = forwardRef<ViewType, DropdownContentProps & {
     },
     ref,
   ) => {
-    const { theme } = useUnistyles();
     const childrenArray = React.Children.toArray(children);
     const hasItems = childrenArray.length > 0;
 
     return (
-      <View 
-        ref={ref} 
-        style={[styles.dropdownContent, { maxHeight }]} 
+      <View
+        ref={ref}
+        style={[styles.dropdownContent, { maxHeight }]}
         onLayout={onLayout}
         {...props}
       >
@@ -46,7 +47,7 @@ export const DropdownContent = forwardRef<ViewType, DropdownContentProps & {
               autoCorrect={false}
               onChangeText={onSearchChange}
               placeholder={searchPlaceholder}
-              placeholderTextColor={theme.colors.textSecondary}
+              placeholderTextColor="#9ca3af"
               style={styles.searchInput}
               value={searchValue}
             />

@@ -62,7 +62,7 @@ export const Default: Story = {
     const [activeTab, setActiveTab] = useState("home");
 
     return (
-      <View style={{ flex: 1, justifyContent: "flex-end", backgroundColor: "#F5F8FF" }}>
+      <View style={{ flex: 1, justifyContent: "flex-end" }}>
         <TabBar
           gradientColors={["#2962FF1A", "#FFFFFF00"]}
           activeTintColor="#2962FF"

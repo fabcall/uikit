@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import type { ViewProps } from "react-native";
 
-import type { Placement } from "../../overlay/ContextMenu/ContextMenu.props";
+import type { Placement } from "../../overlay/Overlay/FloatingEngine";
 
 export interface DropdownOption<T = string> {
   label: string;
@@ -26,22 +26,21 @@ export interface DropdownBaseProps<T = string> extends Omit<ViewProps, "style"> 
    */
   minHeight?: number;
   /**
-   * Position using ContextMenu placement system
-   * Supports all 12 placements: top/bottom/left/right with start/center/end alignment
-   * @defaultValue "bottom-start"
+   * Position of the dropdown menu
+   * @defaultValue "bottom"
    */
   placement?: Placement;
   emptyMessage?: string;
   /**
-   * Offset from trigger
+   * Offset from trigger (gap)
    * @defaultValue 4
    */
   offset?: number;
   /**
-   * Enable collision detection to automatically adjust position
-   * @defaultValue true
+   * Screen padding (distance from screen edges)
+   * @defaultValue 8
    */
-  collisionDetection?: boolean;
+  screenPadding?: number;
 }
 
 export interface DropdownSingleProps<T = string> extends DropdownBaseProps<T> {
@@ -88,6 +87,3 @@ export interface DropdownContentProps extends Omit<ViewProps, "style"> {
   searchValue?: string;
   onSearchChange?: (value: string) => void;
 }
-
-// Re-export types from ContextMenu for convenience
-export type { Placement } from "../../overlay/ContextMenu/ContextMenu.props";

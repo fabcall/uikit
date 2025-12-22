@@ -4,13 +4,6 @@ export const styles = StyleSheet.create((theme) => ({
   container: {
     gap: theme.spacing[1],
   },
-  label: {
-    ...theme.typography.body,
-    marginBottom: theme.spacing[1],
-  },
-  required: {
-    color: theme.colors.error,
-  },
   inputContainer: {
     position: "relative",
     borderWidth: 2,

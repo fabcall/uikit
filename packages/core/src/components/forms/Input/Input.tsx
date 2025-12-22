@@ -7,8 +7,8 @@ import type {
 } from "react-native";
 import { TextInput, View } from "react-native";
 
-import { Text } from "../../data-display/Text";
 import { ErrorMessage } from "../ErrorMessage/ErrorMessage";
+import { InputLabel } from "../InputLabel";
 import type { InputProps } from "./Input.props";
 import { styles } from "./Input.styles";
 
@@ -57,12 +57,7 @@ export const Input = forwardRef<TextInputType, InputProps>(
 
     return (
       <View style={styles.container}>
-        {label ? (
-          <Text color={disabled ? "disabled" : "primary"} style={styles.label}>
-            {label}
-            {required ? <Text style={styles.required}> *</Text> : null}
-          </Text>
-        ) : null}
+        <InputLabel label={label} required={required} disabled={disabled} />
 
         <View style={styles.inputContainer}>
           {leftAccessory ? (

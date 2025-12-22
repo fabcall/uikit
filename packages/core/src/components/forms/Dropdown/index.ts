@@ -8,3 +8,9 @@ export type {
   DropdownSingleProps,
   DropdownTriggerProps,
 } from "./Dropdown.props";
+export {
+  useDropdownMultiple,
+  type UseDropdownReturnMultiple,
+  type UseDropdownReturnSingle,
+  useDropdownSingle,
+} from "./useDropdown";

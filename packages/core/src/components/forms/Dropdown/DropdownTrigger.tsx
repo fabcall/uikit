@@ -1,5 +1,5 @@
 import { AngleDown } from "@readykit/icons";
-import React, { forwardRef } from "react";
+import React, { forwardRef, useEffect } from "react";
 import { Pressable, type View as ViewType } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -7,7 +7,6 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-import { Icon } from "../../data-display/Icon";
 import type { DropdownTriggerProps } from "./Dropdown.props";
 import { styles } from "./Dropdown.styles";
 
@@ -27,17 +26,11 @@ export const DropdownTrigger = forwardRef<ViewType, DropdownTriggerProps>(
   ) => {
     const rotation = useSharedValue(0);
 
-    React.useEffect(() => {
+    useEffect(() => {
       rotation.value = withTiming(isOpen ? 180 : 0, {
         duration: ROTATION_DURATION,
       });
     }, [isOpen, rotation]);
-
-    styles.useVariants({
-      disabled,
-      error: hasError,
-      focused: isOpen,
-    });
 
     const animatedIconStyle = useAnimatedStyle(() => ({
       transform: [{ rotate: `${rotation.value}deg` }],
@@ -50,16 +43,17 @@ export const DropdownTrigger = forwardRef<ViewType, DropdownTriggerProps>(
         disabled={disabled}
         onPress={onPress}
         ref={ref}
-        style={styles.trigger}
+        style={[
+          styles.trigger,
+          disabled && styles.triggerDisabled,
+          hasError && styles.triggerError,
+          isOpen && styles.triggerFocused,
+        ]}
         {...props}
       >
         {children}
         <Animated.View style={[styles.triggerIcon, animatedIconStyle]}>
-          <Icon
-            color={disabled ? "textDisabled" : "textSecondary"}
-            icon={AngleDown}
-            size="sm"
-          />
+          <AngleDown fill={disabled ? "#9ca3af" : "#6b7280"} />
         </Animated.View>
       </Pressable>
     );

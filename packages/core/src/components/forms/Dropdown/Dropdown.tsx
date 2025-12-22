@@ -1,17 +1,15 @@
-import { Check } from "@readykit/icons";
 import React, { forwardRef } from "react";
 import {
-  Modal,
   Pressable,
+  ScrollView,
   Text as RNText,
+  TextInput,
   View,
   type View as ViewType,
 } from "react-native";
-import { UnistylesRuntime } from "react-native-unistyles";
 
-import { usePackageTranslation } from "../../../i18n/usePackageTranslation";
-import { Text } from "../../data-display/Text";
-import { ErrorMessage } from "../ErrorMessage/ErrorMessage";
+import { Overlay } from "../../overlay/Overlay";
+import { InputLabel } from "../InputLabel";
 import type {
   DropdownMultipleProps,
   DropdownProps,
@@ -45,17 +43,15 @@ function SingleSelectTriggerContent<T>({
   dropdown,
   placeholder,
 }: DropdownSingleInternalProps<T>): React.JSX.Element {
-  const theme = UnistylesRuntime.getTheme();
-
   return (
-    <Text
+    <RNText
       style={[
         styles.triggerText,
-        !dropdown.selectedOption && { color: theme.colors.textSecondary },
+        !dropdown.selectedOption && styles.triggerTextPlaceholder,
       ]}
     >
       {dropdown.selectedOption ? dropdown.selectedOption.label : placeholder}
-    </Text>
+    </RNText>
   );
 }
 
@@ -66,14 +62,13 @@ function MultiSelectTriggerContent<T>({
   renderSelectedCount,
   optionsLength,
 }: DropdownMultipleInternalProps<T>): React.JSX.Element {
-  const theme = UnistylesRuntime.getTheme();
   const selectedCount = dropdown.selectedOptions.length;
 
   if (selectedCount === 0) {
     return (
-      <Text style={[styles.triggerText, { color: theme.colors.textSecondary }]}>
+      <RNText style={[styles.triggerText, styles.triggerTextPlaceholder]}>
         {placeholder}
-      </Text>
+      </RNText>
     );
   }
 
@@ -83,9 +78,9 @@ function MultiSelectTriggerContent<T>({
   if (renderSelectedCount && selectedCount > maxDisplayItems) {
     return (
       <View style={styles.triggerContent}>
-        <Text style={styles.triggerText}>
+        <RNText style={styles.triggerText}>
           {renderSelectedCount(selectedCount, optionsLength)}
-        </Text>
+        </RNText>
       </View>
     );
   }
@@ -94,12 +89,12 @@ function MultiSelectTriggerContent<T>({
     <View style={styles.triggerContent}>
       {displayItems.map((option) => (
         <View key={String(option.value)} style={styles.selectedBadge}>
-          <Text style={styles.selectedBadgeText}>{option.label}</Text>
+          <RNText style={styles.selectedBadgeText}>{option.label}</RNText>
         </View>
       ))}
       {remainingCount > 0 ? (
         <View style={styles.selectedCountBadge}>
-          <Text style={styles.selectedCountText}>+{remainingCount}</Text>
+          <RNText style={styles.selectedCountText}>+{remainingCount}</RNText>
         </View>
       ) : null}
     </View>
@@ -125,10 +120,10 @@ function DropdownSingleComponent<T>(
     searchPlaceholder = "Search...",
     maxHeight = 300,
     minHeight = 100,
-    placement,
+    placement = "bottom",
     offset = 4,
+    screenPadding = 8,
     emptyMessage = "No options found",
-    collisionDetection = true,
     forwardedRef,
     ...restProps
   } = props;
@@ -138,85 +133,83 @@ function DropdownSingleComponent<T>(
     value,
     onChange,
     searchable,
-    placement,
-    offset,
-    maxHeight,
-    minHeight,
     disabled,
-    collisionDetection,
-  });
-
-  styles.useVariants({
-    disabled,
-    error: Boolean(error),
   });
 
   return (
     <View ref={forwardedRef} style={styles.container} {...restProps}>
-      {label ? (
-        <Text color={disabled ? "disabled" : "primary"} style={styles.label}>
-          {label}
-          {required ? <RNText style={styles.required}> *</RNText> : null}
-        </Text>
-      ) : null}
+      <InputLabel label={label} required={required} disabled={disabled} />
 
-      <View ref={dropdown.triggerRef}>
+      <View ref={dropdown.anchorRef}>
         <DropdownTrigger
           disabled={disabled}
           hasError={Boolean(error)}
           isOpen={dropdown.isOpen}
           onPress={dropdown.open}
         >
-          <SingleSelectTriggerContent dropdown={dropdown} placeholder={placeholder} />
+          <SingleSelectTriggerContent
+            dropdown={dropdown}
+            placeholder={placeholder}
+          />
         </DropdownTrigger>
       </View>
 
-      <Modal
-        animationType="fade"
-        onRequestClose={dropdown.close}
-        transparent
+      <Overlay
+        anchorRef={dropdown.anchorRef as React.RefObject<View>}
         visible={dropdown.isOpen}
+        onClose={dropdown.close}
+        placement={placement}
+        gap={offset}
+        screenPadding={screenPadding}
+        minHeight={minHeight}
+        maxHeight={maxHeight}
+        matchAnchorWidth
+        contentStyle={styles.dropdownContent}
       >
-        <Pressable onPress={dropdown.close} style={styles.dropdownOverlay}>
-          <View
-            onStartShouldSetResponder={() => true}
-            style={[{ position: "absolute" }, dropdown.position]}
-          >
-            <DropdownContent
-              maxHeight={dropdown.position.maxHeight}
-              onSearchChange={dropdown.setSearchQuery}
-              searchPlaceholder={searchPlaceholder}
-              searchValue={dropdown.searchQuery}
-              searchable={searchable}
-              onLayout={(event) => {
-                const { width, height } = event.nativeEvent.layout;
-                dropdown.setContentSize({ width, height });
-              }}
-            >
-              {dropdown.filteredOptions.length > 0 ? (
-                dropdown.filteredOptions.map((option) => (
-                  <DropdownItem
-                    disabled={option.disabled}
-                    icon={option.icon}
-                    key={String(option.value)}
-                    label={option.label}
-                    multiple={false}
-                    onPress={dropdown.selectOption as (value: unknown) => void}
-                    selected={option.value === value}
-                    value={option.value}
-                  />
-                ))
-              ) : (
-                <View style={styles.emptyContainer}>
-                  <Text style={styles.emptyText}>{emptyMessage}</Text>
-                </View>
-              )}
-            </DropdownContent>
+        {/* Search Input */}
+        {searchable ? (
+          <View style={styles.searchContainer}>
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={dropdown.setSearchQuery}
+              placeholder={searchPlaceholder}
+              placeholderTextColor="#9ca3af"
+              style={styles.searchInput}
+              value={dropdown.searchQuery}
+            />
           </View>
-        </Pressable>
-      </Modal>
+        ) : null}
 
-      {error ? <ErrorMessage error={error} /> : null}
+        {/* Options List */}
+        <ScrollView
+          style={styles.scrollContainer}
+          keyboardShouldPersistTaps="handled"
+          nestedScrollEnabled
+          bounces={false}
+        >
+          {dropdown.filteredOptions.length > 0 ? (
+            dropdown.filteredOptions.map((option) => (
+              <DropdownItem
+                key={String(option.value)}
+                disabled={option.disabled}
+                icon={option.icon}
+                label={option.label}
+                multiple={false}
+                onPress={dropdown.selectOption as (value: unknown) => void}
+                selected={option.value === value}
+                value={option.value}
+              />
+            ))
+          ) : (
+            <View style={styles.emptyContainer}>
+              <RNText style={styles.emptyText}>{emptyMessage}</RNText>
+            </View>
+          )}
+        </ScrollView>
+      </Overlay>
+
+      {error ? <RNText style={styles.errorText}>{error}</RNText> : null}
     </View>
   );
 }
@@ -240,39 +233,24 @@ function DropdownMultipleComponent<T>(
     searchPlaceholder = "Search...",
     maxHeight = 300,
     minHeight = 100,
-    placement,
+    placement = "bottom",
     offset = 4,
+    screenPadding = 8,
     emptyMessage = "No options found",
     showSelectAll = false,
-    selectAllLabel: selectAllLabelProp,
+    selectAllLabel = "Select All",
     maxDisplayItems = 3,
     renderSelectedCount,
-    collisionDetection = true,
     forwardedRef,
     ...restProps
   } = props;
-
-  const { t } = usePackageTranslation();
-  const theme = UnistylesRuntime.getTheme();
 
   const dropdown = useDropdownMultiple({
     options,
     value,
     onChange,
     searchable,
-    placement,
-    offset,
-    maxHeight,
-    minHeight,
     disabled,
-    collisionDetection,
-  });
-
-  const selectAllLabel = selectAllLabelProp ?? t("common.selectAll");
-
-  styles.useVariants({
-    disabled,
-    error: Boolean(error),
   });
 
   const handleToggleSelectAll = (): void => {
@@ -285,14 +263,9 @@ function DropdownMultipleComponent<T>(
 
   return (
     <View ref={forwardedRef} style={styles.container} {...restProps}>
-      {label ? (
-        <Text color={disabled ? "disabled" : "primary"} style={styles.label}>
-          {label}
-          {required ? <RNText style={styles.required}> *</RNText> : null}
-        </Text>
-      ) : null}
+      <InputLabel label={label} required={required} disabled={disabled} />
 
-      <View ref={dropdown.triggerRef}>
+      <View ref={dropdown.anchorRef}>
         <DropdownTrigger
           disabled={disabled}
           hasError={Boolean(error)}
@@ -309,82 +282,96 @@ function DropdownMultipleComponent<T>(
         </DropdownTrigger>
       </View>
 
-      <Modal
-        animationType="fade"
-        onRequestClose={dropdown.close}
-        transparent
+      <Overlay
+        anchorRef={dropdown.anchorRef as React.RefObject<View>}
         visible={dropdown.isOpen}
+        onClose={dropdown.close}
+        placement={placement}
+        gap={offset}
+        screenPadding={screenPadding}
+        minHeight={minHeight}
+        maxHeight={maxHeight}
+        matchAnchorWidth
+        contentStyle={styles.dropdownContent}
       >
-        <Pressable onPress={dropdown.close} style={styles.dropdownOverlay}>
-          <View
-            onStartShouldSetResponder={() => true}
-            style={[{ position: "absolute" }, dropdown.position]}
-          >
-            <DropdownContent
-              maxHeight={dropdown.position.maxHeight}
-              onSearchChange={dropdown.setSearchQuery}
-              searchPlaceholder={searchPlaceholder}
-              searchValue={dropdown.searchQuery}
-              searchable={searchable}
-            >
-              {showSelectAll && dropdown.filteredOptions.length > 0 ? (
-                <Pressable onPress={handleToggleSelectAll} style={styles.selectAllItem}>
-                  <View
-                    style={[
-                      styles.checkbox,
-                      {
-                        borderColor: dropdown.isAllSelected
-                          ? theme.colors.primary
-                          : theme.colors.border,
-                        backgroundColor: dropdown.isAllSelected
-                          ? theme.colors.primary
-                          : "transparent",
-                      },
-                    ]}
-                  >
-                    {dropdown.isAllSelected ? (
-                      <Check fill={theme.colors.onPrimary} height={14} width={14} />
-                    ) : null}
-                  </View>
-                  <Text style={styles.itemLabel}>{selectAllLabel}</Text>
-                </Pressable>
-              ) : null}
-
-              {dropdown.filteredOptions.length > 0 ? (
-                dropdown.filteredOptions.map((option) => (
-                  <DropdownItem
-                    disabled={option.disabled}
-                    icon={option.icon}
-                    key={String(option.value)}
-                    label={option.label}
-                    multiple
-                    onPress={dropdown.toggleOption as (value: unknown) => void}
-                    selected={value.includes(option.value)}
-                    value={option.value}
-                  />
-                ))
-              ) : (
-                <View style={styles.emptyContainer}>
-                  <Text style={styles.emptyText}>{emptyMessage}</Text>
-                </View>
-              )}
-
-              {dropdown.selectedOptions.length > 0 ? (
-                <View style={styles.actionsFooter}>
-                  <Text style={styles.selectedCount}>
-                    {dropdown.selectedOptions.length} {t("common.selected")}
-                  </Text>
-                  <Pressable onPress={dropdown.clearAll} style={styles.actionButton}>
-                    <Text style={styles.actionButtonText}>{t("common.clearAll")}</Text>
-                  </Pressable>
-                </View>
-              ) : null}
-            </DropdownContent>
+        {/* Search Input */}
+        {searchable ? (
+          <View style={styles.searchContainer}>
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={dropdown.setSearchQuery}
+              placeholder={searchPlaceholder}
+              placeholderTextColor="#9ca3af"
+              style={styles.searchInput}
+              value={dropdown.searchQuery}
+            />
           </View>
-        </Pressable>
-      </Modal>
+        ) : null}
 
-      {error ? <ErrorMessage error={error} /> : null}
+        {/* Select All */}
+        {showSelectAll && dropdown.filteredOptions.length > 0 ? (
+          <Pressable
+            onPress={handleToggleSelectAll}
+            style={styles.selectAllItem}
+          >
+            <View
+              style={[
+                styles.checkbox,
+                dropdown.isAllSelected
+                  ? styles.checkboxChecked
+                  : styles.checkboxUnchecked,
+              ]}
+            >
+              {dropdown.isAllSelected ? (
+                <RNText style={{ color: "#fff", fontSize: 12 }}>✓</RNText>
+              ) : null}
+            </View>
+            <RNText style={styles.itemLabel}>{selectAllLabel}</RNText>
+          </Pressable>
+        ) : null}
+
+        {/* Options List */}
+        <ScrollView
+          style={styles.scrollContainer}
+          keyboardShouldPersistTaps="handled"
+          nestedScrollEnabled
+          bounces={false}
+        >
+          {dropdown.filteredOptions.length > 0 ? (
+            dropdown.filteredOptions.map((option) => (
+              <DropdownItem
+                key={String(option.value)}
+                disabled={option.disabled}
+                icon={option.icon}
+                label={option.label}
+                multiple
+                onPress={dropdown.toggleOption as (value: unknown) => void}
+                selected={value.includes(option.value)}
+                value={option.value}
+              />
+            ))
+          ) : (
+            <View style={styles.emptyContainer}>
+              <RNText style={styles.emptyText}>{emptyMessage}</RNText>
+            </View>
+          )}
+        </ScrollView>
+
+        {/* Footer with selected count and clear */}
+        {dropdown.selectedOptions.length > 0 ? (
+          <View style={styles.actionsFooter}>
+            <RNText style={styles.selectedCount}>
+              {dropdown.selectedOptions.length} selected
+            </RNText>
+            <Pressable onPress={dropdown.clearAll} style={styles.actionButton}>
+              <RNText style={styles.actionButtonText}>Clear All</RNText>
+            </Pressable>
+          </View>
+        ) : null}
+      </Overlay>
+
+      {error ? <RNText style={styles.errorText}>{error}</RNText> : null}
     </View>
   );
 }
@@ -393,8 +380,8 @@ function DropdownMultipleComponent<T>(
  * Dropdown Component
  *
  * A flexible dropdown/select component with optional search functionality
- * and multi-select support. Now uses the ContextMenu positioning API for
- * intelligent placement with automatic collision detection.
+ * and multi-select support. Uses the Overlay component for intelligent
+ * positioning with automatic collision detection via middlewares.
  *
  * @example
  * ```tsx
@@ -414,28 +401,11 @@ function DropdownMultipleComponent<T>(
  *
  * @example
  * ```tsx
- * // Multi-select usage with collision detection
- * <Dropdown
- *   label="Select fruits"
- *   placeholder="Choose fruits..."
- *   multiple
- *   value={selectedFruits}
- *   onChange={setSelectedFruits}
- *   options={fruits}
- *   showSelectAll
- *   collisionDetection
- * />
- * ```
- *
- * @example
- * ```tsx
- * // With search and explicit top placement (will shrink/flip if needed)
+ * // With search
  * <Dropdown
  *   label="Select a country"
  *   searchable
  *   searchPlaceholder="Search countries..."
- *   placement="top-start"
- *   minHeight={150}
  *   value={country}
  *   onChange={setCountry}
  *   options={countries}
@@ -444,16 +414,16 @@ function DropdownMultipleComponent<T>(
  *
  * @example
  * ```tsx
- * // All 12 placement options are supported:
- * // top-start, top, top-end
- * // bottom-start, bottom, bottom-end
- * // left-start, left, left-end
- * // right-start, right, right-end
+ * // Multi-select usage
  * <Dropdown
- *   placement="right"
- *   options={options}
- *   value={value}
- *   onChange={setValue}
+ *   label="Select fruits"
+ *   placeholder="Choose fruits..."
+ *   multiple
+ *   value={selectedFruits}
+ *   onChange={setSelectedFruits}
+ *   options={fruits}
+ *   showSelectAll
+ *   searchable
  * />
  * ```
  */
@@ -462,9 +432,7 @@ const DropdownRoot = forwardRef<ViewType, DropdownProps<unknown>>(
     if (props.multiple === true) {
       return <DropdownMultipleComponent {...props} forwardedRef={ref} />;
     }
-    return (
-      <DropdownSingleComponent {...(props)} forwardedRef={ref} />
-    );
+    return <DropdownSingleComponent {...props} forwardedRef={ref} />;
   },
 );
 

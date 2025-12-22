@@ -1,9 +1,6 @@
-import { Check } from "@readykit/icons";
 import React, { forwardRef } from "react";
 import { Pressable, Text, View, type View as ViewType } from "react-native";
-import { UnistylesRuntime } from "react-native-unistyles";
 
-import { Icon } from "../../data-display/Icon";
 import type { DropdownItemProps } from "./Dropdown.props";
 import { styles } from "./Dropdown.styles";
 
@@ -21,13 +18,6 @@ export const DropdownItem = forwardRef<ViewType, DropdownItemProps<unknown>>(
     }: DropdownItemProps<T>,
     ref: React.Ref<ViewType>,
   ) => {
-    styles.useVariants({
-      selected: multiple ? false : selected, // Don't highlight background in multi-select
-      disabled,
-    });
-
-    const theme = UnistylesRuntime.getTheme();
-
     const handlePress = (): void => {
       if (!disabled && onPress) {
         onPress(value);
@@ -43,6 +33,8 @@ export const DropdownItem = forwardRef<ViewType, DropdownItemProps<unknown>>(
         ref={ref}
         style={({ pressed }) => [
           styles.item,
+          !multiple && selected && styles.itemSelected,
+          disabled && styles.itemDisabled,
           pressed && !disabled && styles.itemPressed,
         ]}
         {...props}
@@ -51,26 +43,29 @@ export const DropdownItem = forwardRef<ViewType, DropdownItemProps<unknown>>(
           <View
             style={[
               styles.checkbox,
-              {
-                borderColor: selected ? theme.colors.primary : theme.colors.border,
-                backgroundColor: selected ? theme.colors.primary : "transparent",
-              },
+              selected ? styles.checkboxChecked : styles.checkboxUnchecked,
             ]}
           >
             {selected ? (
-              <Check
-                fill={disabled ? theme.colors.textDisabled : theme.colors.onPrimary}
-                height={14}
-                width={14}
-              />
+              <Text style={{ color: disabled ? "#9ca3af" : "#fff", fontSize: 12 }}>
+                ✓
+              </Text>
             ) : null}
           </View>
         ) : null}
         {icon ? <View style={styles.itemIcon}>{icon}</View> : null}
-        <Text style={styles.itemLabel}>{label}</Text>
+        <Text
+          style={[
+            styles.itemLabel,
+            selected && styles.itemLabelSelected,
+            disabled && styles.itemLabelDisabled,
+          ]}
+        >
+          {label}
+        </Text>
         {!multiple && selected ? (
           <View style={styles.checkIcon}>
-            <Icon color="onPrimaryContainer" icon={Check} size="sm" />
+            <Text style={{ color: "#1e40af", fontSize: 16 }}>✓</Text>
           </View>
         ) : null}
       </Pressable>

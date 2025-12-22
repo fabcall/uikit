@@ -4,7 +4,7 @@ export const styles = StyleSheet.create((theme, rt) => ({
   tabBar: {
     position: "relative",
     borderTopWidth: 1,
-    borderTopColor: theme.colors.border,
+    borderTopColor: theme.colors.background,
     paddingBottom: theme.spacing[2] + rt.insets.bottom,
     paddingTop: theme.spacing[2],
     backgroundColor: theme.colors.background,
@@ -49,6 +49,7 @@ export const styles = StyleSheet.create((theme, rt) => ({
   },
 
   tabLabel: {
+    ...theme.typography.body,
     fontSize: 12,
     fontWeight: "500",
   },

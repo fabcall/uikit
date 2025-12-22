@@ -17,6 +17,7 @@ import { useUnistyles } from "react-native-unistyles";
 import { usePackageTranslation } from "../../../i18n/usePackageTranslation";
 import { Text } from "../../data-display/Text";
 import { ErrorMessage } from "../ErrorMessage/ErrorMessage";
+import { InputLabel } from "../InputLabel";
 import type { TextAreaProps } from "./TextArea.props";
 import { styles } from "./TextArea.styles";
 
@@ -93,12 +94,7 @@ export const TextArea = forwardRef<TextInputType, TextAreaProps>(
 
     return (
       <View style={styles.container}>
-        {label ? (
-          <Text color={disabled ? "disabled" : "primary"} style={styles.label}>
-            {label}
-            {required ? <Text style={styles.required}> *</Text> : null}
-          </Text>
-        ) : null}
+        <InputLabel label={label} required={required} disabled={disabled} />
 
         <Animated.View style={[styles.inputContainer, animatedContainerStyle]}>
           <TextInput

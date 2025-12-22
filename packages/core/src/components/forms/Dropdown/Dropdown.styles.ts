@@ -1,154 +1,110 @@
-import { StyleSheet } from "react-native-unistyles";
+import { StyleSheet } from "react-native";
 
-export const styles = StyleSheet.create((theme) => ({
+export const styles = StyleSheet.create({
   container: {
-    gap: theme.spacing[1],
+    gap: 4,
   },
-  label: {
-    ...theme.typography.body,
-    marginBottom: theme.spacing[1],
+  errorText: {
+    fontSize: 12,
+    color: "#dc3545",
+    marginTop: 4,
   },
-  required: {
-    color: theme.colors.error,
-  },
+  // Trigger
   trigger: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     borderWidth: 2,
-    borderRadius: theme.radii.md,
-    backgroundColor: theme.colors.surface,
-    borderColor: theme.colors.border,
-    paddingHorizontal: theme.spacing[3],
+    borderRadius: 8,
+    backgroundColor: "#fff",
+    borderColor: "#e5e7eb",
+    paddingHorizontal: 12,
     minHeight: 44,
-
-    variants: {
-      disabled: {
-        true: {
-          opacity: 0.5,
-        },
-        false: {},
-      },
-      error: {
-        true: {
-          borderColor: theme.colors.error,
-        },
-        false: {},
-      },
-      focused: {
-        true: {
-          borderColor: theme.colors.primary,
-        },
-        false: {},
-      },
-    },
-
-    compoundVariants: [
-      {
-        error: true,
-        focused: true,
-        styles: {
-          borderColor: theme.colors.error,
-        },
-      },
-    ],
+  },
+  triggerDisabled: {
+    opacity: 0.5,
+  },
+  triggerError: {
+    borderColor: "#dc3545",
+  },
+  triggerFocused: {
+    borderColor: "#3b82f6",
   },
   triggerContent: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
     flexWrap: "wrap",
-    gap: theme.spacing[1],
-    paddingVertical: theme.spacing[2],
+    gap: 4,
+    paddingVertical: 8,
   },
   triggerText: {
-    ...theme.typography.input,
+    fontSize: 16,
     flex: 1,
-
-    variants: {
-      disabled: {
-        true: {
-          color: theme.colors.textDisabled,
-        },
-        false: {
-          color: theme.colors.textPrimary,
-        },
-      },
-      placeholder: {
-        true: {
-          color: theme.colors.textSecondary,
-        },
-        false: {},
-      },
-    },
+    color: "#333",
+  },
+  triggerTextPlaceholder: {
+    color: "#9ca3af",
+  },
+  triggerTextDisabled: {
+    color: "#9ca3af",
   },
   triggerIcon: {
-    marginLeft: theme.spacing[2],
+    marginLeft: 8,
   },
-  // Multi-select chips/badges
+  // Selected badges (multi-select)
   selectedBadge: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: theme.colors.primaryContainer,
-    borderRadius: theme.radii.sm,
-    paddingHorizontal: theme.spacing[2],
-    paddingVertical: theme.spacing[1],
-    gap: theme.spacing[1],
+    backgroundColor: "#dbeafe",
+    borderRadius: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    gap: 4,
   },
   selectedBadgeText: {
-    ...theme.typography.caption,
-    color: theme.colors.onPrimaryContainer,
-  },
-  selectedBadgeRemove: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    backgroundColor: theme.colors.onPrimaryContainer,
-    alignItems: "center",
-    justifyContent: "center",
-    opacity: 0.6,
+    fontSize: 12,
+    color: "#1e40af",
   },
   selectedCountBadge: {
-    backgroundColor: theme.colors.primary,
-    borderRadius: theme.radii.sm,
-    paddingHorizontal: theme.spacing[2],
-    paddingVertical: theme.spacing[1],
+    backgroundColor: "#3b82f6",
+    borderRadius: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
   },
   selectedCountText: {
-    ...theme.typography.caption,
-    color: theme.colors.onPrimary,
-    fontFamily: theme.typography.families.semiBold,
+    fontSize: 12,
+    color: "#fff",
+    fontWeight: "600",
   },
-  dropdownOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: theme.zIndices.dropdown,
-  },
+  // Dropdown content
   dropdownContent: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.radii.md,
+    backgroundColor: "#fff",
+    borderRadius: 8,
     borderWidth: 1,
-    borderColor: theme.colors.border,
-    ...theme.shadows.lg,
-    zIndex: theme.zIndices.dropdown + 1,
+    borderColor: "#e5e7eb",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 8,
     overflow: "hidden",
   },
+  // Search
   searchContainer: {
-    padding: theme.spacing[2],
+    padding: 8,
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border,
+    borderBottomColor: "#e5e7eb",
   },
   searchInput: {
-    ...theme.typography.input,
-    color: theme.colors.textPrimary,
+    fontSize: 16,
+    color: "#333",
     borderWidth: 1,
-    borderColor: theme.colors.border,
-    borderRadius: theme.radii.md,
-    paddingHorizontal: theme.spacing[3],
-    paddingVertical: theme.spacing[2],
-    backgroundColor: theme.colors.background,
+    borderColor: "#e5e7eb",
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    backgroundColor: "#f9fafb",
   },
   scrollContainer: {
     flex: 1,
@@ -157,67 +113,49 @@ export const styles = StyleSheet.create((theme) => ({
   selectAllItem: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: theme.spacing[4],
-    paddingVertical: theme.spacing[3],
-    gap: theme.spacing[2],
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    gap: 8,
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border,
-    backgroundColor: theme.colors.surfaceHighlight,
+    borderBottomColor: "#e5e7eb",
+    backgroundColor: "#f9fafb",
   },
+  // Items
   item: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: theme.spacing[4],
-    paddingVertical: theme.spacing[3],
-    gap: theme.spacing[2],
-
-    variants: {
-      selected: {
-        true: {
-          backgroundColor: theme.colors.primaryContainer,
-        },
-        false: {},
-      },
-      disabled: {
-        true: {
-          opacity: 0.5,
-        },
-        false: {},
-      },
-    },
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    gap: 8,
+  },
+  itemSelected: {
+    backgroundColor: "#dbeafe",
+  },
+  itemDisabled: {
+    opacity: 0.5,
   },
   itemPressed: {
-    backgroundColor: theme.colors.surfaceHighlight,
+    backgroundColor: "#f3f4f6",
   },
   itemIcon: {
-    marginRight: theme.spacing[2],
+    marginRight: 8,
   },
   itemLabel: {
-    ...theme.typography.body,
+    fontSize: 16,
     flex: 1,
-
-    variants: {
-      selected: {
-        true: {
-          color: theme.colors.onPrimaryContainer,
-          fontFamily: theme.typography.families.semiBold,
-        },
-        false: {
-          color: theme.colors.textPrimary,
-        },
-      },
-      disabled: {
-        true: {
-          color: theme.colors.textDisabled,
-        },
-        false: {},
-      },
-    },
+    color: "#333",
+  },
+  itemLabelSelected: {
+    color: "#1e40af",
+    fontWeight: "600",
+  },
+  itemLabelDisabled: {
+    color: "#9ca3af",
   },
   checkIcon: {
     marginLeft: "auto",
   },
-  // Checkbox styles for multi-select
+  // Checkbox (multi-select)
   checkbox: {
     width: 20,
     height: 20,
@@ -225,58 +163,48 @@ export const styles = StyleSheet.create((theme) => ({
     borderWidth: 2,
     alignItems: "center",
     justifyContent: "center",
-
-    variants: {
-      checked: {
-        true: {
-          borderColor: theme.colors.primary,
-          backgroundColor: theme.colors.primary,
-        },
-        false: {
-          borderColor: theme.colors.border,
-          backgroundColor: "transparent",
-        },
-      },
-      disabled: {
-        true: {
-          borderColor: theme.colors.border,
-          backgroundColor: theme.colors.border,
-        },
-      },
-    },
   },
+  checkboxChecked: {
+    borderColor: "#3b82f6",
+    backgroundColor: "#3b82f6",
+  },
+  checkboxUnchecked: {
+    borderColor: "#e5e7eb",
+    backgroundColor: "transparent",
+  },
+  // Empty state
   emptyContainer: {
-    padding: theme.spacing[6],
+    padding: 24,
     alignItems: "center",
     justifyContent: "center",
   },
   emptyText: {
-    ...theme.typography.body,
-    color: theme.colors.textSecondary,
+    fontSize: 16,
+    color: "#9ca3af",
     textAlign: "center",
   },
-  // Multi-select actions footer
+  // Actions footer (multi-select)
   actionsFooter: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: theme.spacing[4],
-    paddingVertical: theme.spacing[3],
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     borderTopWidth: 1,
-    borderTopColor: theme.colors.border,
-    backgroundColor: theme.colors.surfaceHighlight,
+    borderTopColor: "#e5e7eb",
+    backgroundColor: "#f9fafb",
   },
   actionButton: {
-    paddingHorizontal: theme.spacing[3],
-    paddingVertical: theme.spacing[2],
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
   actionButtonText: {
-    ...theme.typography.body,
-    color: theme.colors.primary,
-    fontFamily: theme.typography.families.semiBold,
+    fontSize: 16,
+    color: "#3b82f6",
+    fontWeight: "600",
   },
   selectedCount: {
-    ...theme.typography.caption,
-    color: theme.colors.textSecondary,
+    fontSize: 12,
+    color: "#6b7280",
   },
-}));
+});
