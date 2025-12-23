@@ -7,11 +7,14 @@ export const styles = StyleSheet.create((theme) => ({
         h1: {
           ...theme.typography.h1,
         },
+        h2: {
+          ...theme.typography.h2,
+        },
         body: {
           ...theme.typography.body,
         },
-        button: {
-          ...theme.typography.button,
+        bodySmall: {
+          ...theme.typography.bodySmall,
         },
         caption: {
           ...theme.typography.caption,
@@ -29,17 +32,6 @@ export const styles = StyleSheet.create((theme) => ({
         },
         inverse: {
           color: theme.colors.textInverse,
-        },
-      },
-      align: {
-        left: {
-          textAlign: "left",
-        },
-        center: {
-          textAlign: "center",
-        },
-        right: {
-          textAlign: "right",
         },
       },
     },

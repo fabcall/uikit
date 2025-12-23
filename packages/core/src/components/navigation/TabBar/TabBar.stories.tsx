@@ -1,5 +1,5 @@
 import { Bell, Calendar, File, Home, MapMarker, User } from "@readykit/icons";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { StoryObj } from "@storybook/react";
 import React, { useState } from "react";
 import { View } from "react-native";
 
@@ -8,12 +8,12 @@ import { TabBar } from "./TabBar";
 const meta = {
   title: "Navigation/TabBar",
   component: TabBar,
-  parameters: {
-    layout: "fullscreen",
-  },
-} satisfies Meta<typeof TabBar>;
+  tags: ["autodocs"],
+  parameters: { layout: "fullscreen" },
+}
 
 export default meta;
+
 type Story = StoryObj<typeof meta>;
 
 const TAB_CONFIG = [

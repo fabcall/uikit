@@ -8,13 +8,11 @@ import { CircleAvatar } from "../CircleAvatar";
 import { Icon } from "../Icon";
 import { ListTile } from "./ListTile";
 
-const NOOP = (): void => {
-  /** */
-};
 
 const meta: Meta<typeof ListTile> = {
   title: "DataDisplay/ListTile",
   component: ListTile,
+  tags: ["autodocs"],
   args: {
     title: "List Item Title",
     subtitle: undefined,
@@ -29,6 +27,7 @@ const meta: Meta<typeof ListTile> = {
       options: ["sm", "md", "lg"],
     },
   },
+  parameters: { layout: "fullscreen" },
 };
 
 export default meta;
@@ -65,7 +64,7 @@ export const WithLeadingIcon: Story = {
       />
       <ListTile
         leading={<Icon color="success" icon={Check} size="md" />}
-        subtitle="Another item"
+        subtitle="Ather item"
         title="Completed"
       />
     </View>
@@ -100,14 +99,14 @@ export const WithTrailingIcon: Story = {
   render: () => (
     <View>
       <ListTile
-        onPress={NOOP}
+        onPress={() => {}}
         showDivider
         subtitle="Tap to navigate"
         title="Navigate"
         trailing={<Icon color="textSecondary" icon={ExpandRight} size="md" />}
       />
       <ListTile
-        onPress={NOOP}
+        onPress={() => {}}
         title="Another Item"
         trailing={<Icon color="textSecondary" icon={ExpandRight} size="md" />}
       />
@@ -123,7 +122,7 @@ export const WithTrailingButton: Story = {
         subtitle="Click the button"
         title="Action Item"
         trailing={
-          <IconButton icon={Check} onPress={NOOP} size="sm" variant="ghost" />
+          <IconButton icon={Check} onPress={() => {}} size="sm" variant="ghost" />
         }
       />
     </View>
@@ -168,13 +167,13 @@ export const Pressable: Story = {
   render: () => (
     <View>
       <ListTile
-        onPress={NOOP}
+        onPress={() => {}}
         showDivider
         subtitle="Tap me"
         title="Pressable Item"
       />
       <ListTile
-        onPress={NOOP}
+        onPress={() => {}}
         showDivider
         subtitle="I'm also tappable"
         title="Another Pressable"
@@ -189,13 +188,13 @@ export const Selected: Story = {
     <View>
       <ListTile
         isSelected
-        onPress={NOOP}
+        onPress={() => {}}
         showDivider
         subtitle="This item is selected"
         title="Selected Item"
       />
       <ListTile
-        onPress={NOOP}
+        onPress={() => {}}
         showDivider
         subtitle="This item is not selected"
         title="Normal Item"
@@ -209,13 +208,13 @@ export const Disabled: Story = {
     <View>
       <ListTile
         isDisabled
-        onPress={NOOP}
+        onPress={() => {}}
         showDivider
         subtitle="This item is disabled"
         title="Disabled Item"
       />
       <ListTile
-        onPress={NOOP}
+        onPress={() => {}}
         subtitle="This item is enabled"
         title="Enabled Item"
       />
@@ -264,7 +263,7 @@ export const CompleteExample: Story = {
     <View>
       <ListTile
         leading={<CircleAvatar name="Alice" size="md" />}
-        onPress={NOOP}
+        onPress={() => {}}
         showDivider
         subtitle="Online"
         title="Alice Johnson"
@@ -272,7 +271,7 @@ export const CompleteExample: Story = {
       />
       <ListTile
         leading={<CircleAvatar name="Bob" size="md" />}
-        onPress={NOOP}
+        onPress={() => {}}
         showDivider
         subtitle="Last seen 5 min ago"
         title="Bob Smith"

@@ -33,9 +33,10 @@ const meta: Meta<typeof Badge> = {
       control: "number",
     },
   },
+  parameters: { layout: "fullscreen" },
   decorators: [
     (Story) => (
-      <View style={{ padding: 24, alignItems: "flex-start", gap: 24 }}>
+      <View style={{ padding: 24 }}>
         <Story />
       </View>
     ),
@@ -46,7 +47,13 @@ export default meta;
 
 type Story = StoryObj<typeof Badge>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  render: (args) => (
+    <View style={{ flexDirection: "row", gap: 12 }}>
+      <Badge {...args} />
+    </View>
+  ),
+};
 
 export const Colors: Story = {
   render: () => (

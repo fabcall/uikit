@@ -4,7 +4,6 @@ import React from "react";
 import { Button } from "./Button";
 import { styles } from "./Button.styles";
 
-// Mock useVariants
 const mockUseVariants = jest.fn();
 jest.spyOn(styles, "useVariants").mockImplementation(mockUseVariants);
 

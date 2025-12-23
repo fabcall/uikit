@@ -8,15 +8,8 @@ import { Tooltip } from "./Tooltip";
 const meta: Meta<typeof Tooltip> = {
   title: "Overlay/Tooltip",
   component: Tooltip,
-  decorators: [
-    (Story) => (
-      <SafeAreaProvider>
-        <SafeAreaView style={styles.screenContainer}>
-          <Story />
-        </SafeAreaView>
-      </SafeAreaProvider>
-    ),
-  ],
+  tags: ["autodocs"],
+  parameters: { layout: "fullscreen" },
 };
 
 export default meta;

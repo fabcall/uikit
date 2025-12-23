@@ -1,88 +1,116 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from "react-native-unistyles";
 
-export const styles = StyleSheet.create({
+export const styles = StyleSheet.create((theme) => ({
   container: {
-    gap: 4,
+    gap: theme.spacing[1],
   },
   errorText: {
     fontSize: 12,
-    color: "#dc3545",
-    marginTop: 4,
+    color: theme.colors.error,
+    marginTop: theme.spacing[1],
   },
-  // Trigger
+  // Trigger (seguindo padrão do Input)
   trigger: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     borderWidth: 2,
-    borderRadius: 8,
-    backgroundColor: "#fff",
-    borderColor: "#e5e7eb",
-    paddingHorizontal: 12,
+    borderRadius: theme.radii.md,
+    backgroundColor: theme.colors.surface,
+    borderColor: theme.colors.border,
+    paddingHorizontal: theme.spacing[3],
     minHeight: 44,
-  },
-  triggerDisabled: {
-    opacity: 0.5,
-  },
-  triggerError: {
-    borderColor: "#dc3545",
-  },
-  triggerFocused: {
-    borderColor: "#3b82f6",
+    variants: {
+      disabled: {
+        true: {
+          opacity: 0.5,
+        },
+        false: {},
+      },
+      error: {
+        true: {
+          borderColor: theme.colors.error,
+        },
+        false: {},
+      },
+      open: {
+        true: {
+          borderColor: theme.colors.primary,
+        },
+        false: {},
+      },
+    },
+    compoundVariants: [
+      {
+        error: true,
+        open: true,
+        styles: {
+          borderColor: theme.colors.error,
+        },
+      },
+    ],
   },
   triggerContent: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
     flexWrap: "wrap",
-    gap: 4,
-    paddingVertical: 8,
+    gap: theme.spacing[1],
+    paddingVertical: theme.spacing[2],
   },
   triggerText: {
-    fontSize: 16,
+    ...theme.typography.input,
     flex: 1,
-    color: "#333",
-  },
-  triggerTextPlaceholder: {
-    color: "#9ca3af",
-  },
-  triggerTextDisabled: {
-    color: "#9ca3af",
+    color: theme.colors.textPrimary,
+    variants: {
+      placeholder: {
+        true: {
+          color: theme.colors.textSecondary,
+        },
+        false: {},
+      },
+      disabled: {
+        true: {
+          color: theme.colors.textDisabled,
+        },
+        false: {},
+      },
+    },
   },
   triggerIcon: {
-    marginLeft: 8,
+    marginLeft: theme.spacing[2],
   },
   // Selected badges (multi-select)
   selectedBadge: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#dbeafe",
-    borderRadius: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    gap: 4,
+    backgroundColor: theme.colors.primaryContainer,
+    borderRadius: theme.radii.sm,
+    paddingHorizontal: theme.spacing[2],
+    paddingVertical: theme.spacing[1],
+    gap: theme.spacing[1],
   },
   selectedBadgeText: {
     fontSize: 12,
-    color: "#1e40af",
+    color: theme.colors.onPrimaryContainer,
   },
   selectedCountBadge: {
-    backgroundColor: "#3b82f6",
-    borderRadius: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.radii.sm,
+    paddingHorizontal: theme.spacing[2],
+    paddingVertical: theme.spacing[1],
   },
   selectedCountText: {
     fontSize: 12,
-    color: "#fff",
+    color: theme.colors.onPrimary,
     fontWeight: "600",
   },
   // Dropdown content
   dropdownContent: {
-    backgroundColor: "#fff",
-    borderRadius: 8,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.radii.md,
     borderWidth: 1,
-    borderColor: "#e5e7eb",
+    borderColor: theme.colors.border,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
@@ -92,19 +120,19 @@ export const styles = StyleSheet.create({
   },
   // Search
   searchContainer: {
-    padding: 8,
+    padding: theme.spacing[2],
     borderBottomWidth: 1,
-    borderBottomColor: "#e5e7eb",
+    borderBottomColor: theme.colors.border,
   },
   searchInput: {
-    fontSize: 16,
-    color: "#333",
+    ...theme.typography.input,
+    color: theme.colors.textPrimary,
     borderWidth: 1,
-    borderColor: "#e5e7eb",
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    backgroundColor: "#f9fafb",
+    borderColor: theme.colors.border,
+    borderRadius: theme.radii.md,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[2],
+    backgroundColor: theme.colors.surfaceVariant,
   },
   scrollContainer: {
     flex: 1,
@@ -113,44 +141,73 @@ export const styles = StyleSheet.create({
   selectAllItem: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    gap: 8,
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[3],
+    gap: theme.spacing[2],
     borderBottomWidth: 1,
-    borderBottomColor: "#e5e7eb",
-    backgroundColor: "#f9fafb",
+    borderBottomColor: theme.colors.border,
+    backgroundColor: theme.colors.surfaceVariant,
   },
   // Items
   item: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    gap: 8,
-  },
-  itemSelected: {
-    backgroundColor: "#dbeafe",
-  },
-  itemDisabled: {
-    opacity: 0.5,
-  },
-  itemPressed: {
-    backgroundColor: "#f3f4f6",
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[3],
+    gap: theme.spacing[2],
+    variants: {
+      selected: {
+        true: {
+          backgroundColor: theme.colors.primaryContainer,
+        },
+        false: {},
+      },
+      disabled: {
+        true: {
+          opacity: 0.5,
+        },
+        false: {},
+      },
+      pressed: {
+        true: {
+          backgroundColor: theme.colors.surfaceHighlight,
+        },
+        false: {},
+      },
+    },
+    compoundVariants: [
+      {
+        selected: true,
+        pressed: true,
+        styles: {
+          backgroundColor: theme.colors.primaryContainer,
+          opacity: 0.8,
+        },
+      },
+    ],
   },
   itemIcon: {
-    marginRight: 8,
+    marginRight: theme.spacing[2],
   },
   itemLabel: {
-    fontSize: 16,
+    ...theme.typography.body,
     flex: 1,
-    color: "#333",
-  },
-  itemLabelSelected: {
-    color: "#1e40af",
-    fontWeight: "600",
-  },
-  itemLabelDisabled: {
-    color: "#9ca3af",
+    color: theme.colors.textPrimary,
+    variants: {
+      selected: {
+        true: {
+          color: theme.colors.onPrimaryContainer,
+          fontWeight: "600",
+        },
+        false: {},
+      },
+      disabled: {
+        true: {
+          color: theme.colors.textDisabled,
+        },
+        false: {},
+      },
+    },
   },
   checkIcon: {
     marginLeft: "auto",
@@ -159,28 +216,32 @@ export const styles = StyleSheet.create({
   checkbox: {
     width: 20,
     height: 20,
-    borderRadius: 4,
+    borderRadius: theme.radii.sm,
     borderWidth: 2,
     alignItems: "center",
     justifyContent: "center",
-  },
-  checkboxChecked: {
-    borderColor: "#3b82f6",
-    backgroundColor: "#3b82f6",
-  },
-  checkboxUnchecked: {
-    borderColor: "#e5e7eb",
-    backgroundColor: "transparent",
+    variants: {
+      checked: {
+        true: {
+          borderColor: theme.colors.primary,
+          backgroundColor: theme.colors.primary,
+        },
+        false: {
+          borderColor: theme.colors.border,
+          backgroundColor: "transparent",
+        },
+      },
+    },
   },
   // Empty state
   emptyContainer: {
-    padding: 24,
+    padding: theme.spacing[6],
     alignItems: "center",
     justifyContent: "center",
   },
   emptyText: {
-    fontSize: 16,
-    color: "#9ca3af",
+    ...theme.typography.body,
+    color: theme.colors.textSecondary,
     textAlign: "center",
   },
   // Actions footer (multi-select)
@@ -188,23 +249,23 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[3],
     borderTopWidth: 1,
-    borderTopColor: "#e5e7eb",
-    backgroundColor: "#f9fafb",
+    borderTopColor: theme.colors.border,
+    backgroundColor: theme.colors.surfaceVariant,
   },
   actionButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[2],
   },
   actionButtonText: {
-    fontSize: 16,
-    color: "#3b82f6",
+    ...theme.typography.body,
+    color: theme.colors.primary,
     fontWeight: "600",
   },
   selectedCount: {
     fontSize: 12,
-    color: "#6b7280",
+    color: theme.colors.textSecondary,
   },
-});
+}));

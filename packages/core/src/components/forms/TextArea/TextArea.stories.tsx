@@ -5,12 +5,10 @@ import { Text, View } from "react-native";
 import { TextArea } from "./index";
 
 const meta: Meta<typeof TextArea> = {
-  component: TextArea,
   title: "Forms/TextArea",
-  parameters: {
-    layout: "padded",
-  },
+  component: TextArea,
   tags: ["autodocs"],
+  parameters: { layout: "fullscreen" },
 };
 
 export default meta;

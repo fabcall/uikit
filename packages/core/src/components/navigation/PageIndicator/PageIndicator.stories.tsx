@@ -9,6 +9,7 @@ import { PageIndicator } from "./PageIndicator";
 const meta: Meta<typeof PageIndicator> = {
   title: "Navigation/PageIndicator",
   component: PageIndicator,
+  tags: ["autodocs"],
   args: {
     count: 5,
     currentIndex: 2,
@@ -21,13 +22,7 @@ const meta: Meta<typeof PageIndicator> = {
       control: { type: "number", min: 0, max: 9 },
     },
   },
-  decorators: [
-    (Story) => (
-      <View style={{ padding: 24, alignItems: "center" }}>
-        <Story />
-      </View>
-    ),
-  ],
+  parameters: { layout: "fullscreen" },
 };
 
 export default meta;

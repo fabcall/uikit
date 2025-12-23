@@ -47,9 +47,7 @@ function ToastButton({
 const meta: Meta = {
   title: "Feedback/Toast",
   tags: ["autodocs"],
-  parameters: {
-    layout: "fullscreen",
-  },
+  parameters: { layout: "fullscreen" },
 };
 
 export default meta;

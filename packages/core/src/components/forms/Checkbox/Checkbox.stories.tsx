@@ -7,13 +7,12 @@ import { Checkbox } from "./index";
 const meta: Meta<typeof Checkbox> = {
   component: Checkbox,
   title: "Forms/Checkbox",
-  parameters: {
-    layout: "padded",
-  },
   tags: ["autodocs"],
+  parameters: { layout: "fullscreen" },
 };
 
 export default meta;
+
 type Story = StoryObj<typeof Checkbox>;
 
 export const Default: Story = {

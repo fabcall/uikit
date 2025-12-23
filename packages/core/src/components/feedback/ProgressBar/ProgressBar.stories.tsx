@@ -7,6 +7,7 @@ import { ProgressBar } from "./ProgressBar";
 const meta: Meta<typeof ProgressBar> = {
   title: "Feedback/ProgressBar",
   component: ProgressBar,
+  tags: ["autodocs"],
   args: {
     value: 60,
     color: "primary",
@@ -28,6 +29,14 @@ const meta: Meta<typeof ProgressBar> = {
       options: ["sm", "md", "lg"],
     },
   },
+  parameters: { layout: "fullscreen" },
+  decorators: [
+    (Story) => (
+      <View style={{ padding: 24 }}>
+        <Story />
+      </View>
+    ),
+  ],
 };
 
 export default meta;

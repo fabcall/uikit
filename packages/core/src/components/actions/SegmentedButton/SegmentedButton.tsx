@@ -94,8 +94,8 @@ function SegmentedButtonInner<T extends string>(
       {/* Gradient Background */}
       <LinearGradient
         colors={gradientColors}
-        end={{ x: 1, y: 0 }}
-        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 0 }}
+        start={{ x: 0, y: 1 }}
         style={styles.gradient}
       />
 

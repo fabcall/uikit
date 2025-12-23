@@ -6,25 +6,6 @@ import { Pressable, View } from "react-native";
 import { Text } from "../../data-display/Text";
 import { Banner } from "./Banner";
 
-function StoryWrapper({
-  children,
-}: {
-  children: React.ReactNode;
-}): React.JSX.Element {
-  return (
-    <View
-      style={{
-        alignItems: "center",
-        flex: 1,
-        justifyContent: "center",
-        padding: 24,
-      }}
-    >
-      {children}
-    </View>
-  );
-}
-
 const meta: Meta<typeof Banner> = {
   title: "Feedback/Banner",
   component: Banner,
@@ -41,6 +22,14 @@ const meta: Meta<typeof Banner> = {
       control: "text",
     },
   },
+  parameters: { layout: "fullscreen" },
+  decorators: [
+    (Story) => (
+      <View style={{ padding: 24 }}>
+        <Story />
+      </View>
+    ),
+  ],
 };
 
 export default meta;
@@ -53,11 +42,7 @@ export const Default: Story = {
       "Error retrieving data. We will automatically retry until it is back.",
     variant: "error",
   },
-  render: (args) => (
-    <StoryWrapper>
-      <Banner {...args} />
-    </StoryWrapper>
-  ),
+  render: (args) => <Banner {...args} />,
 };
 
 export const Error: Story = {
@@ -66,11 +51,7 @@ export const Error: Story = {
       "An error occurred while processing your request. Please try again.",
     variant: "error",
   },
-  render: (args) => (
-    <StoryWrapper>
-      <Banner {...args} />
-    </StoryWrapper>
-  ),
+  render: (args) => <Banner {...args} />,
 };
 
 export const Success: Story = {
@@ -78,11 +59,7 @@ export const Success: Story = {
     message: "Data saved successfully! Your changes have been applied.",
     variant: "success",
   },
-  render: (args) => (
-    <StoryWrapper>
-      <Banner {...args} />
-    </StoryWrapper>
-  ),
+  render: (args) => <Banner {...args} />,
 };
 
 export const Warning: Story = {
@@ -91,11 +68,7 @@ export const Warning: Story = {
       "Warning: This action cannot be undone. Please proceed with caution.",
     variant: "warning",
   },
-  render: (args) => (
-    <StoryWrapper>
-      <Banner {...args} />
-    </StoryWrapper>
-  ),
+  render: (args) => <Banner {...args} />,
 };
 
 export const Info: Story = {
@@ -104,11 +77,7 @@ export const Info: Story = {
       "Information: New features are available. Check the updates section.",
     variant: "info",
   },
-  render: (args) => (
-    <StoryWrapper>
-      <Banner {...args} />
-    </StoryWrapper>
-  ),
+  render: (args) => <Banner {...args} />,
 };
 
 export const WithCustomIcon: Story = {
@@ -117,11 +86,7 @@ export const WithCustomIcon: Story = {
     variant: "info",
     icon: Upload,
   },
-  render: (args) => (
-    <StoryWrapper>
-      <Banner {...args} />
-    </StoryWrapper>
-  ),
+  render: (args) => <Banner {...args} />,
 };
 
 export const WithCustomColor: Story = {
@@ -129,11 +94,7 @@ export const WithCustomColor: Story = {
     message: "Custom colored banner with a personalized appearance.",
     color: "#9333EA",
   },
-  render: (args) => (
-    <StoryWrapper>
-      <Banner {...args} />
-    </StoryWrapper>
-  ),
+  render: (args) => <Banner {...args} />,
 };
 
 export const LongMessage: Story = {
@@ -142,35 +103,29 @@ export const LongMessage: Story = {
       "This is a longer message that demonstrates how the banner handles extended text content. The banner should wrap appropriately and maintain proper spacing and readability across multiple lines.",
     variant: "warning",
   },
-  render: (args) => (
-    <StoryWrapper>
-      <Banner {...args} />
-    </StoryWrapper>
-  ),
+  render: (args) => <Banner {...args} />,
 };
 
 export const AllVariants: Story = {
   render: () => (
-    <StoryWrapper>
-      <View style={{ gap: 16, width: "100%" }}>
-        <Banner
-          message="Error: Something went wrong with your request."
-          variant="error"
-        />
-        <Banner
-          message="Success: Your action was completed successfully."
-          variant="success"
-        />
-        <Banner
-          message="Warning: Please review your input before proceeding."
-          variant="warning"
-        />
-        <Banner
-          message="Info: Here is some helpful information for you."
-          variant="info"
-        />
-      </View>
-    </StoryWrapper>
+    <View style={{ gap: 16, width: "100%" }}>
+      <Banner
+        message="Error: Something went wrong with your request."
+        variant="error"
+      />
+      <Banner
+        message="Success: Your action was completed successfully."
+        variant="success"
+      />
+      <Banner
+        message="Warning: Please review your input before proceeding."
+        variant="warning"
+      />
+      <Banner
+        message="Info: Here is some helpful information for you."
+        variant="info"
+      />
+    </View>
   ),
 };
 
@@ -181,39 +136,33 @@ export const WithTitle: Story = {
       "An error occurred while processing your request. Please try again.",
     variant: "error",
   },
-  render: (args) => (
-    <StoryWrapper>
-      <Banner {...args} />
-    </StoryWrapper>
-  ),
+  render: (args) => <Banner {...args} />,
 };
 
 export const AllVariantsWithTitles: Story = {
   render: () => (
-    <StoryWrapper>
-      <View style={{ gap: 16, width: "100%" }}>
-        <Banner
-          message="Something went wrong with your request."
-          title="Error"
-          variant="error"
-        />
-        <Banner
-          message="Your action was completed successfully."
-          title="Success"
-          variant="success"
-        />
-        <Banner
-          message="Please review your input before proceeding."
-          title="Warning"
-          variant="warning"
-        />
-        <Banner
-          message="Here is some helpful information for you."
-          title="Information"
-          variant="info"
-        />
-      </View>
-    </StoryWrapper>
+    <View style={{ gap: 16, width: "100%" }}>
+      <Banner
+        message="Something went wrong with your request."
+        title="Error"
+        variant="error"
+      />
+      <Banner
+        message="Your action was completed successfully."
+        title="Success"
+        variant="success"
+      />
+      <Banner
+        message="Please review your input before proceeding."
+        title="Warning"
+        variant="warning"
+      />
+      <Banner
+        message="Here is some helpful information for you."
+        title="Information"
+        variant="info"
+      />
+    </View>
   ),
 };
 
@@ -241,37 +190,33 @@ export const WithAction: Story = {
     variant: "success",
   },
   render: (args) => (
-    <StoryWrapper>
-      <Banner {...args} action={<ActionLink color="#15803D" title="UNDO" />} />
-    </StoryWrapper>
+    <Banner {...args} action={<ActionLink color="#15803D" title="UNDO" />} />
   ),
 };
 
 export const WithActionVariants: Story = {
   render: () => (
-    <StoryWrapper>
-      <View style={{ gap: 16, width: "100%" }}>
-        <Banner
-          action={<ActionLink color="#991B1B" title="RETRY" />}
-          message="Failed to sync data."
-          variant="error"
-        />
-        <Banner
-          action={<ActionLink color="#15803D" title="VIEW" />}
-          message="Your file has been uploaded."
-          variant="success"
-        />
-        <Banner
-          action={<ActionLink color="#A16207" title="DISMISS" />}
-          message="Your session will expire in 5 minutes."
-          variant="warning"
-        />
-        <Banner
-          action={<ActionLink color="#1D4ED8" title="LEARN MORE" />}
-          message="New features are available."
-          variant="info"
-        />
-      </View>
-    </StoryWrapper>
+    <View style={{ gap: 16, width: "100%" }}>
+      <Banner
+        action={<ActionLink color="#991B1B" title="RETRY" />}
+        message="Failed to sync data."
+        variant="error"
+      />
+      <Banner
+        action={<ActionLink color="#15803D" title="VIEW" />}
+        message="Your file has been uploaded."
+        variant="success"
+      />
+      <Banner
+        action={<ActionLink color="#A16207" title="DISMISS" />}
+        message="Your session will expire in 5 minutes."
+        variant="warning"
+      />
+      <Banner
+        action={<ActionLink color="#1D4ED8" title="LEARN MORE" />}
+        message="New features are available."
+        variant="info"
+      />
+    </View>
   ),
 };

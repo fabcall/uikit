@@ -115,15 +115,7 @@ export const styles = StyleSheet.create((theme) => ({
   trailing: {
     marginLeft: theme.spacing[3],
   },
-  divider: {
-    position: "absolute",
-    bottom: 0,
-    left: theme.spacing[4],
-    right: theme.spacing[4],
-    height: 1,
-    backgroundColor: theme.colors.divider,
-  },
-  dividerWithLeading: {
-    left: 72, // Aligns with content when leading is present
+  dividerContainer: {
+    paddingHorizontal: theme.spacing[4],
   },
 }));

@@ -1,11 +1,6 @@
-import React, { forwardRef, useEffect, useMemo, useState } from "react";
-import {
-  Image,
-  type ImageErrorEvent,
-  Text,
-  View,
-  type View as ViewType,
-} from "react-native";
+import { Image, type ImageLoadEventData } from "expo-image";
+import React, { forwardRef, useMemo, useState } from "react";
+import { Text, View, type View as ViewType } from "react-native";
 import { useUnistyles } from "react-native-unistyles";
 
 import { Spinner } from "../../feedback/Spinner";
@@ -71,42 +66,29 @@ export const CircleAvatar = forwardRef<ViewType, CircleAvatarProps>(
     ref,
   ) => {
     const [imageError, setImageError] = useState(false);
-    const [imageLoading, setImageLoading] = useState(false);
+    const [imageLoading, setImageLoading] = useState(true);
     const { theme } = useUnistyles();
 
     styles.useVariants({
       size,
     });
 
-    // Reset states when source changes
-    useEffect(() => {
-      if (source) {
-        setImageError(false);
-        setImageLoading(false);
-      } else {
-        setImageError(false);
-        setImageLoading(false);
-      }
-    }, [source]);
-
-    const handleImageError = (_error: ImageErrorEvent): void => {
+    const handleImageError = (): void => {
       setImageError(true);
       setImageLoading(false);
     };
 
     const handleImageLoadStart = (): void => {
-      if (source) {
-        setImageLoading(true);
-        setImageError(false);
-      }
+      setImageLoading(true);
+      setImageError(false);
     };
 
-    const handleImageLoad = (): void => {
+    const handleImageLoad = (_event: ImageLoadEventData): void => {
       setImageLoading(false);
       setImageError(false);
     };
 
-    const hasValidImage = source && !imageError && !imageLoading;
+    const hasValidImage = source && !imageError;
     const hasName = name && name.trim().length > 0;
     const hasIcon = IconComponent !== undefined;
 
@@ -177,19 +159,6 @@ export const CircleAvatar = forwardRef<ViewType, CircleAvatarProps>(
       return "Avatar";
     };
 
-    const renderImage = (): React.JSX.Element => {
-      return (
-        <Image
-          onError={handleImageError}
-          onLoad={handleImageLoad}
-          onLoadStart={handleImageLoadStart}
-          source={source}
-          style={styles.image}
-          testID="avatar-image"
-        />
-      );
-    };
-
     const renderIcon = (): React.JSX.Element => {
       if (!IconComponent) {
         throw new Error("IconComponent is required when rendering icon");
@@ -232,58 +201,51 @@ export const CircleAvatar = forwardRef<ViewType, CircleAvatarProps>(
     };
 
     const renderContent = (): React.JSX.Element => {
-      // If we have a source, always render the Image component (even if loading)
-      // so that onLoad/onError events are properly triggered
-      if (source) {
-        // Show spinner overlay while loading
-        if (imageLoading && !imageError) {
-          const fallbackStyle = [
-            styles.fallback,
-            { backgroundColor: effectiveBackgroundColor },
-          ];
-          return (
-            <View style={fallbackStyle}>
-              <Image
-                onError={handleImageError}
-                onLoad={handleImageLoad}
-                onLoadStart={handleImageLoadStart}
-                source={source}
-                style={styles.image}
-                testID="avatar-image"
-              />
+      const fallbackStyle = [
+        styles.fallback,
+        { backgroundColor: effectiveBackgroundColor },
+      ];
+
+      // If we have a valid source and no errors
+      if (hasValidImage) {
+        return (
+          <>
+            <Image
+              source={source}
+              style={styles.image}
+              contentFit="cover"
+              transition={200}
+              onLoadStart={handleImageLoadStart}
+              onLoad={handleImageLoad}
+              onError={handleImageError}
+              placeholder={{ blurhash: "L5H2EC=PM+yV0g-mq.wG9c010J}I" }}
+              cachePolicy="memory-disk"
+              priority="high"
+            />
+            {imageLoading && (
               <View
                 style={[
                   styles.fallback,
                   {
                     backgroundColor: effectiveBackgroundColor,
                     position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
                   },
                 ]}
               >
                 <Spinner color={effectiveForegroundColor} size="md" />
               </View>
-            </View>
-          );
-        }
-
-        // Show image if loaded successfully
-        if (hasValidImage) {
-          return renderImage();
-        }
+            )}
+          </>
+        );
       }
 
-      // Show fallback if image failed or no source
-      const fallbackStyle = [
-        styles.fallback,
-        { backgroundColor: effectiveBackgroundColor },
-      ];
-
-      if (hasName) {
+      // Show fallback content (error or no source)
+      if (hasName || hasIcon) {
         return <View style={fallbackStyle}>{renderFallbackContent()}</View>;
-      }
-
-      if (hasIcon) {
-        return <View style={fallbackStyle}>{renderIcon()}</View>;
       }
 
       return <View style={fallbackStyle} />;

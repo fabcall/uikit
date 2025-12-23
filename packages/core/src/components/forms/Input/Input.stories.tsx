@@ -1,17 +1,17 @@
+import { Search } from "@readykit/icons";
 import type { Meta, StoryObj } from "@storybook/react-native";
 import React, { useRef, useState } from "react";
 import type { TextInput } from "react-native";
 import { Text, View } from "react-native";
 
+import { Icon } from "../../data-display/Icon";
 import { Input } from "./index";
 
 const meta: Meta<typeof Input> = {
   component: Input,
   title: "Forms/Input",
-  parameters: {
-    layout: "padded",
-  },
   tags: ["autodocs"],
+  parameters: { layout: "fullscreen" },
 };
 
 export default meta;
@@ -22,7 +22,7 @@ export const Default: Story = {
     const [value, setValue] = useState<string>("");
 
     return (
-      <View style={{ gap: 16, padding: 20, width: "100%", maxWidth: 400 }}>
+      <View style={{ gap: 16, padding: 20 }}>
         <Input
           onChangeText={setValue}
           placeholder="Enter your name"
@@ -245,7 +245,7 @@ export const WithRightAccessory: Story = {
           onChangeText={setValue}
           placeholder="Search"
           rightAccessory={
-            <Text style={{ color: "#666", fontSize: 14 }}>🔍</Text>
+            <Icon icon={Search} color="textPrimary"/>
           }
           value={value}
         />

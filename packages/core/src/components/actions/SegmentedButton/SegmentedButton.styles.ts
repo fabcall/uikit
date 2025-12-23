@@ -24,7 +24,7 @@ export const styles = StyleSheet.create((theme) => ({
     top: 0,
     left: 0,
     backgroundColor: theme.colors.primary,
-    borderRadius: theme.radii.md,
+    borderRadius: 0, // BORDA INTERNA RETA
   },
   segment: {
     flex: 1,

@@ -5,25 +5,6 @@ import { View } from "react-native";
 
 import { CircleAvatar } from "./CircleAvatar";
 
-function StoryWrapper({
-  children,
-}: {
-  children: React.ReactNode;
-}): React.JSX.Element {
-  return (
-    <View
-      style={{
-        alignItems: "center",
-        flex: 1,
-        justifyContent: "center",
-        padding: 24,
-      }}
-    >
-      {children}
-    </View>
-  );
-}
-
 const meta: Meta<typeof CircleAvatar> = {
   title: "DataDisplay/CircleAvatar",
   component: CircleAvatar,
@@ -34,6 +15,14 @@ const meta: Meta<typeof CircleAvatar> = {
       options: ["sm", "md", "lg"],
     },
   },
+  parameters: { layout: "fullscreen" },
+  decorators: [
+    (Story) => (
+      <View style={{ padding: 24 }}>
+        <Story />
+      </View>
+    ),
+  ],
 };
 
 export default meta;
@@ -49,11 +38,7 @@ export const WithImage: Story = {
       uri: "https://i.pravatar.cc/150?img=12",
     },
   },
-  render: (args) => (
-    <StoryWrapper>
-      <CircleAvatar {...args} />
-    </StoryWrapper>
-  ),
+  render: (args) => <CircleAvatar {...args} />,
 };
 
 export const WithInitials: Story = {
@@ -61,11 +46,7 @@ export const WithInitials: Story = {
     name: "Jane Smith",
     size: "md",
   },
-  render: (args) => (
-    <StoryWrapper>
-      <CircleAvatar {...args} />
-    </StoryWrapper>
-  ),
+  render: (args) => <CircleAvatar {...args} />,
 };
 
 export const WithIcon: Story = {
@@ -74,84 +55,72 @@ export const WithIcon: Story = {
     icon: Upload,
     size: "md",
   },
-  render: (args) => (
-    <StoryWrapper>
-      <CircleAvatar {...args} />
-    </StoryWrapper>
-  ),
+  render: (args) => <CircleAvatar {...args} />,
 };
 
 export const Sizes: Story = {
   render: () => (
-    <StoryWrapper>
-      <View style={{ alignItems: "center", flexDirection: "row", gap: 16 }}>
-        <CircleAvatar name="Small" size="sm" />
-        <CircleAvatar name="Medium" size="md" />
-        <CircleAvatar name="Large" size="lg" />
-      </View>
-    </StoryWrapper>
+    <View style={{ alignItems: "center", flexDirection: "row", gap: 16 }}>
+      <CircleAvatar name="Small" size="sm" />
+      <CircleAvatar name="Medium" size="md" />
+      <CircleAvatar name="Large" size="lg" />
+    </View>
   ),
 };
 
 export const ImageFallback: Story = {
   render: () => (
-    <StoryWrapper>
-      <View style={{ alignItems: "center", gap: 16 }}>
-        <CircleAvatar
-          name="John Doe"
-          source={{ uri: "https://invalid-url.com/image.jpg" }}
-        />
-        <CircleAvatar name="John Doe" />
-      </View>
-    </StoryWrapper>
+    <View style={{ alignItems: "center", gap: 16 }}>
+      <CircleAvatar
+        name="John Doe"
+        source={{ uri: "https://invalid-url.com/image.jpg" }}
+      />
+      <CircleAvatar name="John Doe" />
+    </View>
   ),
 };
 
 export const InitialsExamples: Story = {
   render: () => (
-    <StoryWrapper>
-      <View style={{ alignItems: "center", gap: 16 }}>
-        <CircleAvatar name="John Doe" />
-        <CircleAvatar name="Jane" />
-        <CircleAvatar name="Mary Jane Watson" />
-        <CircleAvatar name="A" />
-      </View>
-    </StoryWrapper>
+    <View style={{ alignItems: "center", gap: 16 }}>
+      <CircleAvatar name="John Doe" />
+      <CircleAvatar name="Jane" />
+      <CircleAvatar name="Mary Jane Watson" />
+      <CircleAvatar name="A" />
+    </View>
   ),
 };
 
 export const AllVariants: Story = {
   render: () => (
-    <StoryWrapper>
-      <View style={{ alignItems: "center", gap: 24 }}>
-        <View style={{ flexDirection: "row", gap: 16 }}>
-          <CircleAvatar
-            name="John Doe"
-            size="sm"
-            source={{ uri: "https://i.pravatar.cc/150?img=1" }}
-          />
-          <CircleAvatar name="Jane" size="sm" />
-          <CircleAvatar icon={Upload} size="sm" />
-        </View>
-        <View style={{ flexDirection: "row", gap: 16 }}>
-          <CircleAvatar
-            name="John Doe"
-            size="md"
-            source={{ uri: "https://i.pravatar.cc/150?img=2" }}
-          />
-          <CircleAvatar name="Jane" size="md" />
-          <CircleAvatar icon={Download} size="md" />
-        </View>
-        <View style={{ flexDirection: "row", gap: 16 }}>
-          <CircleAvatar
-            name="John Doe"
-            size="lg"
-            source={{ uri: "https://i.pravatar.cc/150?img=3" }}
-          />
-          <CircleAvatar name="Jane" size="lg" />
-          <CircleAvatar icon={Upload} size="lg" />
-        </View>
+    <View style={{ alignItems: "center", gap: 24 }}>
+      <View style={{ flexDirection: "row", gap: 16 }}>
+        <CircleAvatar
+          name="John Doe"
+          size="sm"
+          source={{ uri: "https://i.pravatar.cc/150?img=1" }}
+        />
+        <CircleAvatar name="Jane" size="sm" />
+        <CircleAvatar icon={Upload} size="sm" />
       </View>
-    </StoryWrapper>
+      <View style={{ flexDirection: "row", gap: 16 }}>
+        <CircleAvatar
+          name="John Doe"
+          size="md"
+          source={{ uri: "https://i.pravatar.cc/150?img=2" }}
+        />
+        <CircleAvatar name="Jane" size="md" />
+        <CircleAvatar icon={Download} size="md" />
+      </View>
+      <View style={{ flexDirection: "row", gap: 16 }}>
+        <CircleAvatar
+          name="John Doe"
+          size="lg"
+          source={{ uri: "https://i.pravatar.cc/150?img=3" }}
+        />
+        <CircleAvatar name="Jane" size="lg" />
+        <CircleAvatar icon={Upload} size="lg" />
+      </View>
+    </View>
   ),
 };

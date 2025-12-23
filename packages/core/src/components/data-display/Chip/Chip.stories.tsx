@@ -8,6 +8,7 @@ import { Chip } from "./Chip";
 const meta: Meta<typeof Chip> = {
   title: "DataDisplay/Chip",
   component: Chip,
+  tags: ["autodocs"],
   args: {
     label: "Chip",
     color: "primary",
@@ -36,13 +37,23 @@ const meta: Meta<typeof Chip> = {
       options: ["all", "left", "right", "none"],
     },
   },
+  parameters: { layout: "fullscreen" },
+  decorators: [
+    (Story) => (
+      <View style={{ padding: 24 }}>
+        <Story />
+      </View>
+    ),
+  ],
 };
 
 export default meta;
 
 type Story = StoryObj<typeof Chip>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  render: (args) => <Chip {...args} />,
+};
 
 export const Variants: Story = {
   render: () => (

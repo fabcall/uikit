@@ -15,5 +15,6 @@ export { ExpandRight } from "./ExpandRight";
 export { File } from "./File";
 export { Home } from "./Home";
 export { MapMarker } from "./MapMarker";
+export { Search } from "./Search";
 export { Upload } from "./Upload";
 export { User } from "./User";

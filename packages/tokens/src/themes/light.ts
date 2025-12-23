@@ -12,6 +12,7 @@ export const lightTheme = {
     background: colors.background.base,
     surface: colors.background.surface,
     surfaceHighlight: colors.background.elevated,
+    surfaceVariant: colors.background.elevated,
 
     // MD3-style surface tint levels (elevation)
     surfaceLevel0: colors.surfaceTint.level0,

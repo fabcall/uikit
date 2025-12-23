@@ -4,31 +4,35 @@ import { View } from "react-native";
 import { Divider } from "./Divider";
 
 const meta: Meta<typeof Divider> = {
-  component: Divider,
   title: "DataDisplay/Divider",
-  parameters: {
-    layout: "padded",
-  },
+  component: Divider,
   tags: ["autodocs"],
+  parameters: { layout: "fullscreen" },
+  decorators: [
+    (Story) => (
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          flex: 1,
+          padding: 24,
+        }}
+      >
+        <Story />
+      </View>
+    ),
+  ],
 };
 
 export default meta;
 type Story = StoryObj<typeof Divider>;
 
 export const Default: Story = {
-  render: () => (
-    <View style={{ width: "100%", padding: 20 }}>
-      <Divider />
-    </View>
-  ),
+  render: () => <Divider />,
 };
 
 export const WithText: Story = {
-  render: () => (
-    <View style={{ width: "100%", padding: 20 }}>
-      <Divider text="OR" />
-    </View>
-  ),
+  render: () => <Divider text="OR" />,
 };
 
 export const Thickness: Story = {

@@ -26,6 +26,12 @@ export const DropdownTrigger = forwardRef<ViewType, DropdownTriggerProps>(
   ) => {
     const rotation = useSharedValue(0);
 
+    styles.useVariants({
+      disabled,
+      error: hasError,
+      open: isOpen,
+    });
+
     useEffect(() => {
       rotation.value = withTiming(isOpen ? 180 : 0, {
         duration: ROTATION_DURATION,
@@ -43,12 +49,7 @@ export const DropdownTrigger = forwardRef<ViewType, DropdownTriggerProps>(
         disabled={disabled}
         onPress={onPress}
         ref={ref}
-        style={[
-          styles.trigger,
-          disabled && styles.triggerDisabled,
-          hasError && styles.triggerError,
-          isOpen && styles.triggerFocused,
-        ]}
+        style={styles.trigger}
         {...props}
       >
         {children}
@@ -56,7 +57,7 @@ export const DropdownTrigger = forwardRef<ViewType, DropdownTriggerProps>(
           <AngleDown fill={disabled ? "#9ca3af" : "#6b7280"} />
         </Animated.View>
       </Pressable>
-    );
+      );
   },
 );
 

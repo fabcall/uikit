@@ -8,6 +8,7 @@ import {
   type ViewStyle,
 } from "react-native";
 
+import { Divider } from "../Divider";
 import type { ListTileProps } from "./ListTile.props";
 import { styles } from "./ListTile.styles";
 
@@ -48,42 +49,41 @@ export const ListTile = forwardRef<View, ListTileProps>(
     const isInteractive = Boolean(onPress) && !isDisabled;
 
     return (
-      <Pressable
-        accessibilityRole={isInteractive ? "button" : "text"}
-        accessibilityState={{
-          disabled: isDisabled,
-          selected: isSelected,
-        }}
-        disabled={isDisabled || !onPress}
-        onPress={onPress}
-        ref={ref}
-        style={getPressableStyle}
-        {...props}
-      >
-        {leading ? <View style={styles.leading}>{leading}</View> : null}
+      <View style={{ position: "relative" }}>
+        <Pressable
+          accessibilityRole={isInteractive ? "button" : "text"}
+          accessibilityState={{
+            disabled: isDisabled,
+            selected: isSelected,
+          }}
+          disabled={isDisabled || !onPress}
+          onPress={onPress}
+          ref={ref}
+          style={getPressableStyle}
+          {...props}
+        >
+          {leading ? <View style={styles.leading}>{leading}</View> : null}
 
-        <View style={styles.content}>
-          <Text numberOfLines={1} style={styles.title}>
-            {title}
-          </Text>
-          {subtitle ? (
-            <Text numberOfLines={2} style={styles.subtitle}>
-              {subtitle}
+          <View style={styles.content}>
+            <Text numberOfLines={1} style={styles.title}>
+              {title}
             </Text>
-          ) : null}
-        </View>
+            {subtitle ? (
+              <Text numberOfLines={2} style={styles.subtitle}>
+                {subtitle}
+              </Text>
+            ) : null}
+          </View>
 
-        {trailing ? <View style={styles.trailing}>{trailing}</View> : null}
+          {trailing ? <View style={styles.trailing}>{trailing}</View> : null}
+        </Pressable>
 
-        {showDivider ? (
-          <View
-            style={[
-              styles.divider,
-              Boolean(leading) && styles.dividerWithLeading,
-            ]}
-          />
-        ) : null}
-      </Pressable>
+        {showDivider && (
+          <View style={styles.dividerContainer}>
+            <Divider orientation="horizontal" thickness="sm" />
+          </View>
+        )}
+      </View>
     );
   },
 );

@@ -6,25 +6,6 @@ import { Button } from "../../actions/Button";
 import { Text } from "../../data-display/Text";
 import { Dialog } from "./Dialog";
 
-function StoryWrapper({
-  children,
-}: {
-  children: React.ReactNode;
-}): React.JSX.Element {
-  return (
-    <View
-      style={{
-        alignItems: "center",
-        flex: 1,
-        justifyContent: "center",
-        padding: 24,
-      }}
-    >
-      {children}
-    </View>
-  );
-}
-
 const meta: Meta<typeof Dialog> = {
   title: "Surfaces/Dialog",
   component: Dialog,
@@ -37,6 +18,14 @@ const meta: Meta<typeof Dialog> = {
       control: "boolean",
     },
   },
+  parameters: { layout: "fullscreen" },
+  decorators: [
+    (Story) => (
+      <View style={{ padding: 24 }}>
+        <Story />
+      </View>
+    ),
+  ],
 };
 
 export default meta;
@@ -47,7 +36,7 @@ function DefaultDialogExample(): React.JSX.Element {
   const [open, setOpen] = useState(false);
 
   return (
-    <StoryWrapper>
+    <>
       <Button
         onPress={() => {
           setOpen(true);
@@ -81,7 +70,7 @@ function DefaultDialogExample(): React.JSX.Element {
           />
         </Dialog.Actions>
       </Dialog>
-    </StoryWrapper>
+    </>
   );
 }
 
@@ -93,7 +82,7 @@ function AlertDialogExample(): React.JSX.Element {
   const [open, setOpen] = useState(false);
 
   return (
-    <StoryWrapper>
+    <>
       <Button
         color="secondary"
         onPress={() => {
@@ -128,7 +117,7 @@ function AlertDialogExample(): React.JSX.Element {
           />
         </Dialog.Actions>
       </Dialog>
-    </StoryWrapper>
+    </>
   );
 }
 
@@ -140,7 +129,7 @@ function NonDismissibleDialogExample(): React.JSX.Element {
   const [open, setOpen] = useState(false);
 
   return (
-    <StoryWrapper>
+    <>
       <Button
         onPress={() => {
           setOpen(true);
@@ -168,7 +157,7 @@ function NonDismissibleDialogExample(): React.JSX.Element {
           />
         </Dialog.Actions>
       </Dialog>
-    </StoryWrapper>
+    </>
   );
 }
 
@@ -180,7 +169,7 @@ function WithCustomContentExample(): React.JSX.Element {
   const [open, setOpen] = useState(false);
 
   return (
-    <StoryWrapper>
+    <>
       <Button
         onPress={() => {
           setOpen(true);
@@ -238,7 +227,7 @@ function WithCustomContentExample(): React.JSX.Element {
           />
         </Dialog.Actions>
       </Dialog>
-    </StoryWrapper>
+    </>
   );
 }
 
@@ -264,7 +253,7 @@ function ActionsAlignmentExample(): React.JSX.Element {
   };
 
   return (
-    <StoryWrapper>
+    <>
       <View style={{ gap: 12 }}>
         <Button
           onPress={() => {
@@ -304,7 +293,7 @@ function ActionsAlignmentExample(): React.JSX.Element {
           />
         </Dialog.Actions>
       </Dialog>
-    </StoryWrapper>
+    </>
   );
 }
 
@@ -316,7 +305,7 @@ function SimpleInfoDialogExample(): React.JSX.Element {
   const [open, setOpen] = useState(false);
 
   return (
-    <StoryWrapper>
+    <>
       <Button
         onPress={() => {
           setOpen(true);
@@ -343,7 +332,7 @@ function SimpleInfoDialogExample(): React.JSX.Element {
           />
         </Dialog.Actions>
       </Dialog>
-    </StoryWrapper>
+    </>
   );
 }
 

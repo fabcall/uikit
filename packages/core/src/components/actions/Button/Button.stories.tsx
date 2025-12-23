@@ -4,25 +4,6 @@ import { View } from "react-native";
 
 import { Button } from "./Button";
 
-function StoryWrapper({
-  children,
-}: {
-  children: React.ReactNode;
-}): React.JSX.Element {
-  return (
-    <View
-      style={{
-        alignItems: "center",
-        flex: 1,
-        justifyContent: "center",
-        padding: 24,
-      }}
-    >
-      {children}
-    </View>
-  );
-}
-
 const meta: Meta<typeof Button> = {
   title: "Actions/Button",
   component: Button,
@@ -43,6 +24,14 @@ const meta: Meta<typeof Button> = {
     isLoading: { control: "boolean" },
     isDisabled: { control: "boolean" },
   },
+  parameters: { layout: "fullscreen" },
+  decorators: [
+    (Story) => (
+      <View style={{ padding: 24 }}>
+        <Story />
+      </View>
+    ),
+  ],
 };
 
 export default meta;
@@ -56,11 +45,6 @@ export const PrimarySolid: Story = {
     variant: "solid",
     size: "md",
   },
-  render: (args) => (
-    <StoryWrapper>
-      <Button {...args} />
-    </StoryWrapper>
-  ),
 };
 
 export const SecondarySolid: Story = {
@@ -70,11 +54,6 @@ export const SecondarySolid: Story = {
     variant: "solid",
     size: "md",
   },
-  render: (args) => (
-    <StoryWrapper>
-      <Button {...args} />
-    </StoryWrapper>
-  ),
 };
 
 export const PrimaryOutline: Story = {
@@ -84,11 +63,6 @@ export const PrimaryOutline: Story = {
     variant: "outline",
     size: "md",
   },
-  render: (args) => (
-    <StoryWrapper>
-      <Button {...args} />
-    </StoryWrapper>
-  ),
 };
 
 export const SecondaryOutline: Story = {
@@ -98,11 +72,6 @@ export const SecondaryOutline: Story = {
     variant: "outline",
     size: "md",
   },
-  render: (args) => (
-    <StoryWrapper>
-      <Button {...args} />
-    </StoryWrapper>
-  ),
 };
 
 export const PrimaryGhost: Story = {
@@ -112,11 +81,6 @@ export const PrimaryGhost: Story = {
     variant: "ghost",
     size: "md",
   },
-  render: (args) => (
-    <StoryWrapper>
-      <Button {...args} />
-    </StoryWrapper>
-  ),
 };
 
 export const SecondaryGhost: Story = {
@@ -126,11 +90,6 @@ export const SecondaryGhost: Story = {
     variant: "ghost",
     size: "md",
   },
-  render: (args) => (
-    <StoryWrapper>
-      <Button {...args} />
-    </StoryWrapper>
-  ),
 };
 
 export const Loading: Story = {
@@ -139,24 +98,24 @@ export const Loading: Story = {
     color: "primary",
     isLoading: true,
   },
-  render: (args) => (
-    <StoryWrapper>
-      <Button {...args} />
-    </StoryWrapper>
-  ),
 };
 
 export const AllVariants: Story = {
-  render: () => (
-    <StoryWrapper>
-      <View style={{ gap: 16, width: "100%" }}>
-        <Button color="primary" title="Primary Solid" variant="solid" />
-        <Button color="secondary" title="Secondary Solid" variant="solid" />
-        <Button color="primary" title="Primary Outline" variant="outline" />
-        <Button color="secondary" title="Secondary Outline" variant="outline" />
-        <Button color="primary" title="Primary Ghost" variant="ghost" />
-        <Button color="secondary" title="Secondary Ghost" variant="ghost" />
+  decorators: [
+    (Story) => (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Story />
       </View>
-    </StoryWrapper>
+    ),
+  ],
+  render: () => (
+    <View style={{ gap: 16, width: "100%", maxWidth: 400 }}>
+      <Button color="primary" title="Primary Solid" variant="solid" />
+      <Button color="secondary" title="Secondary Solid" variant="solid" />
+      <Button color="primary" title="Primary Outline" variant="outline" />
+      <Button color="secondary" title="Secondary Outline" variant="outline" />
+      <Button color="primary" title="Primary Ghost" variant="ghost" />
+      <Button color="secondary" title="Secondary Ghost" variant="ghost" />
+    </View>
   ),
 };

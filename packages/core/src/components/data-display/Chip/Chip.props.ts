@@ -9,8 +9,11 @@ export type ChipColor =
   | "error"
   | "warning"
   | "info";
+  
 export type ChipVariant = "solid" | "outline";
+
 export type ChipSize = "sm" | "md";
+
 export type ChipRoundedSide = "all" | "left" | "right" | "none";
 
 export interface ChipProps extends Omit<PressableProps, "style"> {

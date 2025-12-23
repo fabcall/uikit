@@ -6,7 +6,7 @@ export const styles = StyleSheet.create((theme) => ({
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 9999,
+    zIndex: theme.zIndices.toast,
     pointerEvents: "box-none",
   },
   toastWrapper: {
@@ -26,16 +26,16 @@ export const styles = StyleSheet.create((theme) => ({
     variants: {
       variant: {
         success: {
-          backgroundColor: theme.colors.successContainer,
+          backgroundColor: theme.colors.surface,
         },
         error: {
-          backgroundColor: theme.colors.errorContainer,
+          backgroundColor: theme.colors.surface,
         },
         warning: {
-          backgroundColor: theme.colors.warningContainer,
+          backgroundColor: theme.colors.surface,
         },
         info: {
-          backgroundColor: theme.colors.infoContainer,
+          backgroundColor: theme.colors.surface,
         },
         none: {
           backgroundColor: theme.colors.surface,
@@ -54,10 +54,10 @@ export const styles = StyleSheet.create((theme) => ({
     fontFamily: theme.typography.families.semiBold,
     variants: {
       variant: {
-        success: { color: theme.colors.onSuccessContainer },
-        error: { color: theme.colors.onErrorContainer },
-        warning: { color: theme.colors.onWarningContainer },
-        info: { color: theme.colors.onInfoContainer },
+        success: { color: theme.colors.textPrimary },
+        error: { color: theme.colors.textPrimary },
+        warning: { color: theme.colors.textPrimary },
+        info: { color: theme.colors.textPrimary },
         none: { color: theme.colors.textPrimary },
       },
     },
@@ -69,11 +69,11 @@ export const styles = StyleSheet.create((theme) => ({
     ...theme.typography.caption,
     variants: {
       variant: {
-        success: { color: theme.colors.onSuccessContainer },
-        error: { color: theme.colors.onErrorContainer },
-        warning: { color: theme.colors.onWarningContainer },
-        info: { color: theme.colors.onInfoContainer },
-        none: { color: theme.colors.textSecondary },
+        success: { color: theme.colors.textPrimary },
+        error: { color: theme.colors.textPrimary },
+        warning: { color: theme.colors.textPrimary },
+        info: { color: theme.colors.textPrimary },
+        none: { color: theme.colors.textPrimary },
       },
     },
   },

@@ -6,13 +6,12 @@ import { styles } from "./Text.styles";
 
 export const Text = forwardRef<RNText, TextProps>(
   (
-    { variant = "body", color = "primary", align = "left", children, ...props },
+    { variant = "body", color = "primary", children, ...props },
     ref,
   ) => {
     styles.useVariants({
       variant,
       color,
-      align,
     });
 
     return (

@@ -5,12 +5,10 @@ import { View } from "react-native";
 import { Radio } from "./index";
 
 const meta: Meta<typeof Radio> = {
-  component: Radio,
   title: "Forms/Radio",
-  parameters: {
-    layout: "padded",
-  },
+  component: Radio,
   tags: ["autodocs"],
+  parameters: { layout: "fullscreen" },
 };
 
 export default meta;

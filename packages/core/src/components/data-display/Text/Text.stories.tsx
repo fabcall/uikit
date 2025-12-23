@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-native";
+import { View } from "react-native";
 
 import { Text } from "./Text";
 
@@ -15,11 +16,15 @@ const meta: Meta<typeof Text> = {
       control: "select",
       options: ["primary", "secondary", "disabled", "inverse"],
     },
-    align: {
-      control: "radio",
-      options: ["left", "center", "right"],
-    },
   },
+  parameters: { layout: "fullscreen" },
+  decorators: [
+    (Story) => (
+      <View style={{ padding: 24 }}>
+        <Story />
+      </View>
+    ),
+  ],
 };
 
 export default meta;
@@ -31,7 +36,6 @@ export const Default: Story = {
     children: "Default text",
     variant: "body",
     color: "primary",
-    align: "left",
   },
 };
 
@@ -64,23 +68,5 @@ export const Disabled: Story = {
     children: "Disabled text",
     variant: "body",
     color: "disabled",
-  },
-};
-
-export const CenterAligned: Story = {
-  args: {
-    children: "Centered text",
-    variant: "body",
-    color: "primary",
-    align: "center",
-  },
-};
-
-export const RightAligned: Story = {
-  args: {
-    children: "Right-aligned text",
-    variant: "body",
-    color: "primary",
-    align: "right",
   },
 };
