@@ -79,7 +79,7 @@ export const Button = forwardRef<View, ButtonProps>(
         {...props}
       >
         {isLoading ? (
-          <Spinner color={spinnerColor} size="md" testID="activity-indicator" />
+          <Spinner color={spinnerColor} size="md" testID="spinner" />
         ) : (
           <Text style={styles.label}>{title}</Text>
         )}

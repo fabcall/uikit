@@ -20,7 +20,7 @@ export * from "./feedback/Toast";
 
 // Forms
 export * from "./forms/Checkbox";
-// export * from "./forms/Dropdown";
+export * from "./forms/Dropdown";
 export * from "./forms/ErrorMessage";
 export * from "./forms/Input";
 export * from "./forms/Radio";
@@ -33,6 +33,10 @@ export * from "./layout/Surface";
 
 // Navigation
 export * from "./navigation/PageIndicator";
+export * from "./navigation/TabBar";
+
+// Overlay
+export * from "./overlay/Tooltip";
 
 // Surfaces
 export * from "./surfaces/Card";

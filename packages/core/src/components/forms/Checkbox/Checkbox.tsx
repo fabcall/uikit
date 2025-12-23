@@ -47,8 +47,6 @@ const CheckboxBase = forwardRef<ViewType, CheckboxProps<unknown>>(
               fill={
                 disabled ? theme.colors.textDisabled : theme.colors.onPrimary
               }
-              height={20}
-              width={20}
             />
           ) : null}
         </View>

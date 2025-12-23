@@ -118,7 +118,7 @@ export const TextArea = forwardRef<TextInputType, TextAreaProps>(
           {resizable ? (
             <GestureDetector gesture={panGesture}>
               <View style={styles.resizeHandle}>
-                <ExpandLeft height={20} width={20} />
+                <ExpandLeft size={20} />
               </View>
             </GestureDetector>
           ) : null}

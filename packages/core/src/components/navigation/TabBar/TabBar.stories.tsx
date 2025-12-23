@@ -20,35 +20,35 @@ const TAB_CONFIG = [
   {
     id: "home",
     icon: ({ color, size }: { color: string; size: number }) => (
-      <Home fill={color} width={size} height={size} />
+      <Home fill={color} size={size} />
     ),
     label: "Home",
   },
   {
     id: "findShifts",
     icon: ({ color, size }: { color: string; size: number }) => (
-      <MapMarker fill={color} width={size} height={size} />
+      <MapMarker fill={color} size={size} />
     ),
     label: "Find shifts",
   },
   {
     id: "schedule",
     icon: ({ color, size }: { color: string; size: number }) => (
-      <Calendar fill={color} width={size} height={size} />
+      <Calendar fill={color} size={size} />
     ),
     label: "Schedule",
   },
   {
     id: "activity",
     icon: ({ color, size }: { color: string; size: number }) => (
-      <File fill={color} width={size} height={size} />
+      <File fill={color} size={size} />
     ),
     label: "Activity",
   },
   {
     id: "profile",
     icon: ({ color, size }: { color: string; size: number }) => (
-      <User fill={color} width={size} height={size} />
+      <User fill={color} size={size} />
     ),
     label: "Profile",
   },
@@ -103,7 +103,7 @@ export const WithBadges: Story = {
         >
           <TabBar.Item
             icon={({ color, size }) => (
-              <Home fill={color} width={size} height={size} />
+              <Home fill={color} size={size} />
             )}
             label="Home"
             focused={activeTab === "home"}
@@ -111,7 +111,7 @@ export const WithBadges: Story = {
           />
           <TabBar.Item
             icon={({ color, size }) => (
-              <Bell fill={color} width={size} height={size} />
+              <Bell fill={color} size={size} />
             )}
             label="Notifications"
             badge={12}
@@ -120,7 +120,7 @@ export const WithBadges: Story = {
           />
           <TabBar.Item
             icon={({ color, size }) => (
-              <Calendar fill={color} width={size} height={size} />
+              <Calendar fill={color} size={size} />
             )}
             label="Schedule"
             badge="NEW"
@@ -129,7 +129,7 @@ export const WithBadges: Story = {
           />
           <TabBar.Item
             icon={({ color, size }) => (
-              <User fill={color} width={size} height={size} />
+              <User fill={color} size={size} />
             )}
             label="Profile"
             badge={true}

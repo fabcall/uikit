@@ -18,10 +18,6 @@ const RadioBase = forwardRef<ViewType, RadioProps<unknown>>(
     ref: React.Ref<ViewType>,
   ) => {
     styles.useVariants({
-      disabled,
-    });
-
-    styles.useVariants({
       selected,
       disabled,
     });
