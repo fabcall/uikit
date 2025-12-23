@@ -148,16 +148,16 @@ export function useDropdownMultiple<T = string>(
     [options, value]
   );
 
-  const enabledOptions = useMemo(
-    () => options.filter((opt) => !opt.disabled),
-    [options]
+  const enabledFilteredOptions = useMemo(
+    () => filteredOptions.filter((opt) => !opt.disabled),
+    [filteredOptions]
   );
 
   const isAllSelected = useMemo(
     () =>
-      enabledOptions.length > 0 &&
-      enabledOptions.every((opt) => value.includes(opt.value)),
-    [enabledOptions, value]
+      enabledFilteredOptions.length > 0 &&
+      enabledFilteredOptions.every((opt) => value.includes(opt.value)),
+    [enabledFilteredOptions, value]
   );
 
   const toggleOption = useCallback(
@@ -171,21 +171,19 @@ export function useDropdownMultiple<T = string>(
   );
 
   const selectAll = useCallback(() => {
-    const enabledValues = enabledOptions.map((opt) => opt.value);
+    const enabledValues = enabledFilteredOptions.map((opt) => opt.value);
     const disabledSelectedValues = value.filter((v) => {
       const option = options.find((opt) => opt.value === v);
       return option?.disabled;
     });
     onChange?.([...new Set([...disabledSelectedValues, ...enabledValues])]);
-  }, [enabledOptions, options, value, onChange]);
+  }, [enabledFilteredOptions, options, value, onChange]);
 
   const clearAll = useCallback(() => {
-    const disabledSelectedValues = value.filter((v) => {
-      const option = options.find((opt) => opt.value === v);
-      return option?.disabled;
-    });
-    onChange?.(disabledSelectedValues);
-  }, [options, value, onChange]);
+    const enabledFilteredValues = enabledFilteredOptions.map((opt) => opt.value);
+    const newValue = value.filter((v) => !enabledFilteredValues.includes(v));
+    onChange?.(newValue);
+  }, [enabledFilteredOptions, value, onChange]);
 
   const open = useCallback(() => {
     if (!disabled) {

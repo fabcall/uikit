@@ -9,13 +9,7 @@ const meta: Meta<typeof Dropdown> = {
   component: Dropdown,
   tags: ["autodocs"],
   parameters: { layout: "fullscreen" },
-  decorators: [
-    (Story) => (
-      <View style={{ padding: 24 }}>
-        <Story />
-      </View>
-    ),
-  ],
+
 };
 
 export default meta;
@@ -134,7 +128,7 @@ export const FlipBehavior: Story = {
 // 7. Large List (tests automatic scroll)
 export const LargeList: Story = {
   render: (args) => (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "stretch" }}>
+    <View style={{ justifyContent: "center", alignItems: "stretch" }}>
       <Text
         style={{
           marginBottom: 10,
@@ -142,8 +136,7 @@ export const LargeList: Story = {
           textAlign: "center",
         }}
       >
-        {`Menu with 20 items. The 'size' middleware applies maxHeight
-        automatically.`}
+        {`Menu with 20 items. The 'size' middleware applies maxHeight automatically.`}
       </Text>
       {/* @ts-expect-error - No type error */}
       <SingleDropdownWrapper {...args} />

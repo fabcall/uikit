@@ -77,6 +77,11 @@ export const styles = StyleSheet.create((theme) => ({
       },
     },
   },
+  triggerTextPlaceholder: {
+    ...theme.typography.input,
+    flex: 1,
+    color: theme.colors.textSecondary,
+  },
   triggerIcon: {
     marginLeft: theme.spacing[2],
   },
@@ -135,9 +140,9 @@ export const styles = StyleSheet.create((theme) => ({
     backgroundColor: theme.colors.surfaceVariant,
   },
   scrollContainer: {
-    flex: 1,
+    flexGrow: 0,
+    flexShrink: 1,
   },
-  // Select All item
   selectAllItem: {
     flexDirection: "row",
     alignItems: "center",
@@ -168,17 +173,10 @@ export const styles = StyleSheet.create((theme) => ({
         },
         false: {},
       },
-      pressed: {
-        true: {
-          backgroundColor: theme.colors.surfaceHighlight,
-        },
-        false: {},
-      },
     },
     compoundVariants: [
       {
         selected: true,
-        pressed: true,
         styles: {
           backgroundColor: theme.colors.primaryContainer,
           opacity: 0.8,

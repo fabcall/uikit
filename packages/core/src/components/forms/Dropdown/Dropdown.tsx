@@ -9,6 +9,7 @@ import {
 } from "react-native";
 
 import { Overlay } from "../../overlay/Overlay";
+import { Checkbox } from "../Checkbox";
 import { InputLabel } from "../InputLabel";
 import type {
   DropdownMultipleProps,
@@ -105,7 +106,7 @@ function MultiSelectTriggerContent<T>({
  * Single Select Dropdown Component
  */
 function DropdownSingleComponent<T>(
-  props: DropdownSingleProps<T> & { forwardedRef?: React.Ref<ViewType> },
+  props: DropdownSingleProps<T> & { forwardedRef?: React.Ref<ViewType> }
 ): React.JSX.Element {
   const {
     label,
@@ -218,7 +219,7 @@ function DropdownSingleComponent<T>(
  * Multiple Select Dropdown Component
  */
 function DropdownMultipleComponent<T>(
-  props: DropdownMultipleProps<T> & { forwardedRef?: React.Ref<ViewType> },
+  props: DropdownMultipleProps<T> & { forwardedRef?: React.Ref<ViewType> }
 ): React.JSX.Element {
   const {
     label,
@@ -311,24 +312,14 @@ function DropdownMultipleComponent<T>(
 
         {/* Select All */}
         {showSelectAll && dropdown.filteredOptions.length > 0 ? (
-          <Pressable
-            onPress={handleToggleSelectAll}
-            style={styles.selectAllItem}
-          >
-            <View
-              style={[
-                styles.checkbox,
-                dropdown.isAllSelected
-                  ? styles.checkboxChecked
-                  : styles.checkboxUnchecked,
-              ]}
-            >
-              {dropdown.isAllSelected ? (
-                <RNText style={{ color: "#fff", fontSize: 12 }}>✓</RNText>
-              ) : null}
-            </View>
-            <RNText style={styles.itemLabel}>{selectAllLabel}</RNText>
-          </Pressable>
+          <View style={styles.selectAllItem}>
+            <Checkbox
+              checked={dropdown.isAllSelected}
+              onChange={handleToggleSelectAll}
+              label={selectAllLabel}
+              value="select-all"
+            />
+          </View>
         ) : null}
 
         {/* Options List */}
@@ -433,7 +424,7 @@ const DropdownRoot = forwardRef<ViewType, DropdownProps<unknown>>(
       return <DropdownMultipleComponent {...props} forwardedRef={ref} />;
     }
     return <DropdownSingleComponent {...props} forwardedRef={ref} />;
-  },
+  }
 );
 
 DropdownRoot.displayName = "Dropdown";
@@ -447,5 +438,5 @@ export const Dropdown = Object.assign(DropdownRoot, {
   Content: typeof DropdownContent;
   Item: typeof DropdownItem;
 } & (<T = string>(
-    props: DropdownProps<T> & { ref?: React.Ref<ViewType> },
+    props: DropdownProps<T> & { ref?: React.Ref<ViewType> }
   ) => React.JSX.Element);

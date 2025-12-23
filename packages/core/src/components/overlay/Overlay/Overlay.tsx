@@ -96,7 +96,7 @@ export const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
     if (gap) list.push(offset(gap));
     if (matchAnchorWidth) list.push(matchWidth());
     if (!disableFlip) list.push(flip({ minHeight, gap, screenPadding }));
-    if (!disableShift) list.push(shift(screenPadding));
+    if (!disableShift && !matchAnchorWidth) list.push(shift(screenPadding));
     if (!disableResize) list.push(size(screenPadding, { maxHeight }));
 
     return list;
@@ -147,7 +147,6 @@ export const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
     [window, insets, placement, middlewares],
   );
 
-  // Medir anchor
   const measureAnchor = useCallback(() => {
     if (!anchorRef.current) return;
 
@@ -164,7 +163,6 @@ export const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
     }, delay);
   }, [anchorRef]);
 
-  // Quando o conteúdo é medido via onLayout
   const handleContentLayout = useCallback(
     (event: { nativeEvent: { layout: { width: number; height: number } } }) => {
       if (!anchorRect || hasMeasured) return;
@@ -221,19 +219,18 @@ export const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
     }
   }, [propVisible, measureAnchor]);
 
-  // Animações padrão
   const entering = FadeIn.duration(200).springify();
   const exiting = FadeOut.duration(150);
 
   if (!visible) return null;
 
-  // Se ainda não mediu, renderiza invisível para medir
   const shouldRenderInvisible = anchorRect && !hasMeasured;
   const shouldRenderVisible = anchorRect && hasMeasured && position;
 
-  // Largura para o conteúdo (usa anchor width se matchAnchorWidth)
-  const contentWidth =
-    matchAnchorWidth && anchorRect ? anchorRect.width : position?.width;
+  // Força o uso da largura do anchor quando matchAnchorWidth está ativo
+  const contentWidth = matchAnchorWidth && anchorRect 
+    ? anchorRect.width 
+    : (position?.width || undefined);
 
   return (
     <Modal
@@ -247,28 +244,25 @@ export const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
         activeOpacity={1}
         onPress={onClose}
       >
-        {/* Renderiza invisível para medir */}
         {shouldRenderInvisible && (
           <View
             style={[
               styles.baseOverlay,
               {
-                position: "absolute",
-                left: anchorRect.x,
-                top: anchorRect.y,
+                position: 'absolute',
+                top: -9999,
+                left: -9999,
                 width: contentWidth,
-                opacity: 0,
               },
               contentStyle,
             ]}
             onLayout={handleContentLayout}
             pointerEvents="none"
           >
-            <View style={{ flexShrink: 1 }}>{children}</View>
+            {children}
           </View>
         )}
 
-        {/* Renderiza visível após medir */}
         {shouldRenderVisible && (
           <Animated.View
             entering={entering}
@@ -285,7 +279,7 @@ export const Overlay = forwardRef<OverlayRef, OverlayProps>((props, ref) => {
               contentStyle,
             ]}
           >
-            <TouchableOpacity activeOpacity={1} style={{ flexShrink: 1 }}>
+            <TouchableOpacity activeOpacity={1}>
               {children}
             </TouchableOpacity>
           </Animated.View>

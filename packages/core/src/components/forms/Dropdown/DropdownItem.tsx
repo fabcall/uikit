@@ -1,6 +1,9 @@
+import { Check } from "@readykit/icons";
 import React, { forwardRef } from "react";
 import { Pressable, Text, View, type View as ViewType } from "react-native";
+import { useUnistyles } from "react-native-unistyles";
 
+import { Checkbox } from "../Checkbox";
 import type { DropdownItemProps } from "./Dropdown.props";
 import { styles } from "./Dropdown.styles";
 
@@ -16,8 +19,15 @@ export const DropdownItem = forwardRef<ViewType, DropdownItemProps<unknown>>(
       multiple = false,
       ...props
     }: DropdownItemProps<T>,
-    ref: React.Ref<ViewType>,
+    ref: React.Ref<ViewType>
   ) => {
+    const { theme } = useUnistyles();
+
+    styles.useVariants({
+      selected: !multiple && selected,
+      disabled,
+    });
+
     const handlePress = (): void => {
       if (!disabled && onPress) {
         onPress(value);
@@ -33,44 +43,30 @@ export const DropdownItem = forwardRef<ViewType, DropdownItemProps<unknown>>(
         ref={ref}
         style={({ pressed }) => [
           styles.item,
-          !multiple && selected && styles.itemSelected,
-          disabled && styles.itemDisabled,
-          pressed && !disabled && styles.itemPressed,
+          pressed && !disabled && { opacity: 0.7 },
         ]}
         {...props}
       >
         {multiple ? (
-          <View
-            style={[
-              styles.checkbox,
-              selected ? styles.checkboxChecked : styles.checkboxUnchecked,
-            ]}
-          >
-            {selected ? (
-              <Text style={{ color: disabled ? "#9ca3af" : "#fff", fontSize: 12 }}>
-                ✓
-              </Text>
-            ) : null}
+          <View pointerEvents="none">
+            <Checkbox
+              checked={selected}
+              disabled={disabled}
+              onChange={() => {}} // Handled by Pressable onPress
+              value={value}
+            />
           </View>
         ) : null}
         {icon ? <View style={styles.itemIcon}>{icon}</View> : null}
-        <Text
-          style={[
-            styles.itemLabel,
-            selected && styles.itemLabelSelected,
-            disabled && styles.itemLabelDisabled,
-          ]}
-        >
-          {label}
-        </Text>
+        <Text style={styles.itemLabel}>{label}</Text>
         {!multiple && selected ? (
           <View style={styles.checkIcon}>
-            <Text style={{ color: "#1e40af", fontSize: 16 }}>✓</Text>
+            <Check size={16} fill={theme.colors.onPrimaryContainer} />
           </View>
         ) : null}
       </Pressable>
     );
-  },
+  }
 );
 
 DropdownItem.displayName = "Dropdown.Item";
